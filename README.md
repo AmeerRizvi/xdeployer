@@ -7,6 +7,7 @@ A simple, powerful deployment tool for Next.js applications to EC2 instances usi
 xdeployer is a bash script that simplifies the deployment of Next.js applications to EC2 instances. It handles the build process, transfers the files to your server(s), and manages the application using PM2.
 
 **Key Features:**
+
 - Deploy to multiple servers with a single command
 - Support for different package managers (npm, yarn, pnpm, bun)
 - Automatic detection of your project's package manager
@@ -27,7 +28,7 @@ xdeployer is a bash script that simplifies the deployment of Next.js application
 
 ```bash
 # Using curl
-curl -L https://github.com/yourusername/xdeployer/archive/main.tar.gz | tar xz --strip=1 xdeployer-main/run.sh xdeployer-main/servers.json.template
+curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz --strip=1 xdeployer-main/run.sh xdeployer-main/servers.json.template
 
 # Rename the template
 mv servers.json.template servers.json
@@ -38,7 +39,7 @@ mv servers.json.template servers.json
 ```js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: "standalone"
   // other config options...
 };
 
@@ -105,17 +106,17 @@ sh run.sh update production --dev
 
 Each server in `servers.json` has the following properties:
 
-| Property | Description |
-|----------|-------------|
-| `id` | Unique identifier for the server |
-| `name` | Human-readable name |
-| `app_name` | Name for the PM2 process |
-| `port` | Port to run the Next.js app on |
-| `key_path` | Path to your SSH key file |
-| `user` | SSH username (e.g., ec2-user, ubuntu) |
-| `host` | Server hostname or IP address |
-| `remote_dir` | Directory on the server to deploy to |
-| `url` | URL where the app will be accessible |
+| Property     | Description                           |
+| ------------ | ------------------------------------- |
+| `id`         | Unique identifier for the server      |
+| `name`       | Human-readable name                   |
+| `app_name`   | Name for the PM2 process              |
+| `port`       | Port to run the Next.js app on        |
+| `key_path`   | Path to your SSH key file             |
+| `user`       | SSH username (e.g., ec2-user, ubuntu) |
+| `host`       | Server hostname or IP address         |
+| `remote_dir` | Directory on the server to deploy to  |
+| `url`        | URL where the app will be accessible  |
 
 ## EC2 Server Setup
 

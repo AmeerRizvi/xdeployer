@@ -31,8 +31,8 @@ Edit your `next.config.js` file to include the standalone output option:
 ```js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
-  reactStrictMode: true,
+  output: "standalone",
+  reactStrictMode: true
 };
 
 module.exports = nextConfig;
@@ -44,7 +44,7 @@ Download and install xdeployer:
 
 ```bash
 # Using curl
-curl -L https://github.com/yourusername/xdeployer/archive/main.tar.gz | tar xz
+curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz
 cd xdeployer-main
 chmod +x install.sh
 ./install.sh
@@ -80,6 +80,7 @@ Replace the placeholder values with your actual EC2 instance details.
 Make sure your EC2 instance has:
 
 1. Node.js installed:
+
 ```bash
 # For Amazon Linux 2
 curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
@@ -91,11 +92,13 @@ sudo apt-get install -y nodejs
 ```
 
 2. PM2 installed:
+
 ```bash
 sudo npm install -g pm2
 ```
 
 3. Create the deployment directory:
+
 ```bash
 mkdir -p /home/ec2-user/apps/my-nextjs-app
 ```
