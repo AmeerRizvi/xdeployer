@@ -10,7 +10,7 @@ if [ ! -f "package.json" ]; then
 fi
 
 # Check if jq is installed
-if ! command -v jq &> /dev/null; then
+if ! command -v jq &>/dev/null; then
   echo "Warning: jq is not installed. You will need to install it before using xdeployer."
   echo "  - macOS: brew install jq"
   echo "  - Ubuntu/Debian: sudo apt-get install jq"
@@ -18,15 +18,15 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # Check if zip is installed
-if ! command -v zip &> /dev/null; then
+if ! command -v zip &>/dev/null; then
   echo "Warning: zip is not installed. You will need to install it before using xdeployer."
   echo "  - macOS: brew install zip"
   echo "  - Ubuntu/Debian: sudo apt-get install zip"
   echo "  - CentOS/RHEL: sudo yum install zip"
 fi
 
-# Copy the run.sh script
-cp run.sh ../
+# Copy the xdeploy.sh script
+cp xdeploy.sh ../
 
 # Copy the servers.json.template and rename it
 cp servers.json.template ../servers.json
@@ -51,7 +51,7 @@ echo "xdeployer has been installed successfully!"
 echo "Please edit the servers.json file to configure your deployment targets."
 echo ""
 echo "To deploy your Next.js app, run:"
-echo "  sh run.sh create your-server-id"
+echo "  sh xdeploy.sh create your-server-id"
 echo ""
 echo "For more information, see the README.md file."
 

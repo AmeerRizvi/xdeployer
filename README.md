@@ -28,7 +28,7 @@ xdeployer is a bash script that simplifies the deployment of Next.js application
 
 ```bash
 # Using curl
-curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz --strip=1 xdeployer-main/run.sh xdeployer-main/servers.json.template
+curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz --strip=1 xdeployer-main/xdeploy.sh xdeployer-main/servers.json.template
 
 # Rename the template
 mv servers.json.template servers.json
@@ -60,7 +60,8 @@ module.exports = nextConfig;
       "user": "ec2-user",
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ec2-user/apps/my-nextjs-app",
-      "url": "http://your-domain-or-ip:3000/"
+      "url": "http://your-domain-or-ip:3000/",
+      "_comment": "(url is optional)"
     }
   ]
 }
@@ -72,51 +73,51 @@ module.exports = nextConfig;
 
 ```bash
 # Create a new deployment
-sh run.sh create production
+sh xdeploy.sh create production
 
 # Update an existing deployment
-sh run.sh update production
+sh xdeploy.sh update production
 ```
 
 ### Deploy to all servers
 
 ```bash
-sh run.sh create all
+sh xdeploy.sh create all
 ```
 
 ### List available servers
 
 ```bash
-sh run.sh list
+sh xdeploy.sh list
 ```
 
 ### Show server details
 
 ```bash
-sh run.sh info production
+sh xdeploy.sh info production
 ```
 
 ### Start development server after update
 
 ```bash
-sh run.sh update production --dev
+sh xdeploy.sh update production --dev
 ```
 
 ## Server Configuration
 
 Each server in `servers.json` has the following properties:
 
-| Property     | Description                           |
-| ------------ | ------------------------------------- |
-| `id`         | Unique identifier for the server      |
-| `name`       | Human-readable name                   |
-| `app_name`   | Name for the PM2 process              |
-| `port`       | Port to run the Next.js app on        |
-| `key_path`   | Path to your SSH key file             |
-| `user`       | SSH username (e.g., ec2-user, ubuntu) |
-| `host`       | Server hostname or IP address         |
-| `remote_dir` | Directory on the server to deploy to  |
-| `url`        | URL where the app will be accessible  |
+| Property     | Description                                                         |
+| ------------ | ------------------------------------------------------------------- |
+| `id`         | Unique identifier for the server                                    |
+| `name`       | Human-readable name                                                 |
+| `app_name`   | Name for the PM2 process                                            |
+| `port`       | Port to run the Next.js app on                                      |
+| `key_path`   | Path to your SSH key file                                           |
+| `user`       | SSH username (e.g., ec2-user, ubuntu)                               |
+| `host`       | Server hostname or IP address                                       |
+| `remote_dir` | Directory on the server to deploy to                                |
+| `url`        | URL where the app will be accessible (optional, for reference only) |
 
 ## EC2 Server Setup
 

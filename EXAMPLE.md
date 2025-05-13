@@ -46,8 +46,7 @@ Download and install xdeployer:
 # Using curl
 curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz
 cd xdeployer-main
-chmod +x install.sh
-./install.sh
+sh install.sh
 cd ..
 ```
 
@@ -67,7 +66,8 @@ Edit the `servers.json` file that was created in your project root:
       "user": "ec2-user",
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ec2-user/apps/my-nextjs-app",
-      "url": "http://your-domain-or-ip:3000/"
+      "url": "http://your-domain-or-ip:3000/",
+      "_comment": "(url is optional)"
     }
   ]
 }
@@ -109,10 +109,10 @@ Now you can deploy your Next.js application to your EC2 instance:
 
 ```bash
 # Create a new deployment
-sh run.sh create production
+sh xdeploy.sh create production
 
 # For subsequent updates
-sh run.sh update production
+sh xdeploy.sh update production
 ```
 
 ## 7. Access Your Application

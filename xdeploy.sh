@@ -5,13 +5,15 @@
 #
 # Usage:
 #   Deploy to all servers:
-#     sh run.sh create|update all
+#     sh xdeploy.sh create|update all
 #   Deploy to a specific server:
-#     sh run.sh create|update server1
+#     sh xdeploy.sh create|update server1
 #   List available servers:
-#     sh run.sh list
+#     sh xdeploy.sh list
 #   Show server details:
-#     sh run.sh info server1
+#     sh xdeploy.sh info server1
+#   Start dev server after update:
+#     sh xdeploy.sh update server1 --dev
 
 set -e
 
