@@ -1,19 +1,22 @@
 #!/bin/bash
-# Unified production deployment script for LogLight
+# xdeployer - Next.js EC2 Deployment Script with PM2
+#
+# A simple deployment script for Next.js applications to EC2 instances using PM2
+#
 # Usage:
 #   Deploy to all servers:
-#     sh .run.sh create|update all
+#     sh run.sh create|update all
 #   Deploy to a specific server:
-#     sh .run.sh create|update server1
+#     sh run.sh create|update server1
 #   List available servers:
-#     sh .run.sh list
+#     sh run.sh list
 #   Show server details:
-#     sh .run.sh info server1
+#     sh run.sh info server1
 
 set -e
 
 # Check if jq is installed
-if ! command -v jq &> /dev/null; then
+if ! command -v jq &>/dev/null; then
     echo "Error: jq is required but not installed."
     echo "Please install jq first:"
     echo "  - macOS: brew install jq"
@@ -41,13 +44,13 @@ list_servers() {
 show_server_info() {
     local server_id=$1
     local server_info=$(jq -r ".servers[] | select(.id == \"$server_id\")" "$SERVERS_FILE")
-    
+
     if [ -z "$server_info" ]; then
         echo "Error: Server with ID '$server_id' not found"
         list_servers
         exit 1
     fi
-    
+
     echo "Server details for '$server_id':"
     echo "$server_info" | jq '.'
 }
@@ -56,16 +59,16 @@ show_server_info() {
 deploy_to_server() {
     local mode=$1
     local server_id=$2
-    
+
     # Get server details
     local server_info=$(jq -r ".servers[] | select(.id == \"$server_id\")" "$SERVERS_FILE")
-    
+
     if [ -z "$server_info" ]; then
         echo "Error: Server with ID '$server_id' not found"
         list_servers
         exit 1
     fi
-    
+
     # Extract server details
     local app_name=$(echo "$server_info" | jq -r '.app_name')
     local port=$(echo "$server_info" | jq -r '.port')
@@ -74,32 +77,44 @@ deploy_to_server() {
     local host=$(echo "$server_info" | jq -r '.host')
     local remote_dir=$(echo "$server_info" | jq -r '.remote_dir')
     local url=$(echo "$server_info" | jq -r '.url')
-    
+
     echo "=== Deploying to $server_id: $url ==="
     echo "Mode: $mode"
     echo "App: $app_name"
     echo "Host: $host"
-    
+
     # Build the application if not already built
     if [ ! -d ".next/standalone" ]; then
         echo "Building application..."
-        bun run build || exit 1
+        # Check if using npm, yarn, pnpm or bun
+        if [ -f "package-lock.json" ]; then
+            npm run build || exit 1
+        elif [ -f "yarn.lock" ]; then
+            yarn build || exit 1
+        elif [ -f "pnpm-lock.yaml" ]; then
+            pnpm run build || exit 1
+        elif [ -f "bun.lockb" ]; then
+            bun run build || exit 1
+        else
+            echo "No package manager lock file found. Defaulting to npm..."
+            npm run build || exit 1
+        fi
         cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
     fi
-    
+
     # Create zip file if it doesn't exist
     if [ ! -f "standalone.zip" ]; then
         echo "Creating deployment package..."
         zip -r standalone.zip ./.next/standalone
     fi
-    
+
     echo "Deploying to server..."
     # Create remote directory
     ssh -i "$key_path" "$user@$host" "mkdir -p $remote_dir"
-    
+
     # Copy zip file
     scp -i "$key_path" standalone.zip "$user@$host:$remote_dir/"
-    
+
     # Execute remote commands
     ssh -i "$key_path" "$user@$host" <<EOF
 cd $remote_dir
@@ -121,7 +136,7 @@ else
   pm2 restart "$app_name"
 fi
 EOF
-    
+
     echo "Deployment to $server_id complete!"
     echo "URL: $url"
     echo ""
@@ -147,13 +162,16 @@ if [ "$MODE" = "info" ]; then
 fi
 
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
-    echo "Usage: $0 create|update|list|info [server_id|all]"
+    echo "Usage: $0 create|update|list|info [server_id|all] [--dev]"
     echo ""
     echo "Commands:"
     echo "  create [server_id|all]  - Create a new deployment"
     echo "  update [server_id|all]  - Update an existing deployment"
     echo "  list                    - List available servers"
     echo "  info [server_id]        - Show server details"
+    echo ""
+    echo "Options:"
+    echo "  --dev                   - Start development server after update (only with update command)"
     echo ""
     list_servers
     exit 1
@@ -167,7 +185,19 @@ fi
 
 # Build the application
 echo "Building application..."
-bun run build || exit 1
+# Check if using npm, yarn, pnpm or bun
+if [ -f "package-lock.json" ]; then
+    npm run build || exit 1
+elif [ -f "yarn.lock" ]; then
+    yarn build || exit 1
+elif [ -f "pnpm-lock.yaml" ]; then
+    pnpm run build || exit 1
+elif [ -f "bun.lockb" ]; then
+    bun run build || exit 1
+else
+    echo "No package manager lock file found. Defaulting to npm..."
+    npm run build || exit 1
+fi
 cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
 zip -r standalone.zip ./.next/standalone
 
@@ -185,8 +215,20 @@ fi
 # Clean up
 rm standalone.zip
 
-# Start dev server if in update mode
-if [[ "$MODE" == "update" ]]; then
+# Start dev server if in update mode and --dev flag is provided
+if [[ "$MODE" == "update" && "$3" == "--dev" ]]; then
     echo "Starting development server..."
-    bun dev
+    # Check if using npm, yarn, pnpm or bun
+    if [ -f "package-lock.json" ]; then
+        npm run dev
+    elif [ -f "yarn.lock" ]; then
+        yarn dev
+    elif [ -f "pnpm-lock.yaml" ]; then
+        pnpm run dev
+    elif [ -f "bun.lockb" ]; then
+        bun dev
+    else
+        echo "No package manager lock file found. Defaulting to npm..."
+        npm run dev
+    fi
 fi

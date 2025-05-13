@@ -1,0 +1,30 @@
+# Next.js build output
+.next/
+out/
+
+# Node modules
+node_modules/
+
+# Deployment files
+standalone.zip
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Server configuration (contains sensitive information)
+# Include the template but not the actual configuration
+servers.json
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,15 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Enable output standalone for PM2 deployment
+  output: 'standalone',
+  
+  // Add any other Next.js configuration options here
+  reactStrictMode: true,
+  
+  // Example: Configure image domains if needed
+  // images: {
+  //   domains: ['example.com'],
+  // },
+};
+
+module.exports = nextConfig;
