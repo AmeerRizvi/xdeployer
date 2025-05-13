@@ -1,0 +1,37 @@
+{
+  "servers": [
+    {
+      "id": "server1",
+      "name": "Primary Server",
+      "app_name": "loglight",
+      "port": 3176,
+      "key_path": "~/.ssh/jumnah-prod.pem",
+      "user": "ec2-user",
+      "host": "ec2-51-112-33-97.me-central-1.compute.amazonaws.com",
+      "remote_dir": "/home/ec2-user/projects/loglight",
+      "url": "http://51.112.33.97:3176/"
+    },
+    {
+      "id": "server2",
+      "name": "Secondary Server",
+      "app_name": "loglight",
+      "port": 3176,
+      "key_path": "~/.ssh/jumnah-market-fetcher-key.pem",
+      "user": "ubuntu",
+      "host": "ec2-51-112-146-79.me-central-1.compute.amazonaws.com",
+      "remote_dir": "/home/ubuntu/projects/loglight",
+      "url": "http://51.112.146.79:3176/"
+    },
+    {
+      "id": "server3",
+      "name": "Third Server",
+      "app_name": "loglight",
+      "port": 3176,
+      "key_path": "~/.ssh/hm-key.pem",
+      "user": "ec2-user",
+      "host": "ec2-18-143-196-241.ap-southeast-1.compute.amazonaws.com",
+      "remote_dir": "/home/ec2-user/projects/loglight",
+      "url": "http://18.143.196.241:3176/"
+    }
+  ]
+}
