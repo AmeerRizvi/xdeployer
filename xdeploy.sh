@@ -17,6 +17,9 @@
 
 set -e
 
+# Script version
+VERSION="1.0.0"
+
 # Check if jq is installed
 if ! command -v jq &>/dev/null; then
     echo "Error: jq is required but not installed."
@@ -39,7 +42,7 @@ fi
 # Function to list all available servers
 list_servers() {
     echo "Available servers:"
-    jq -r '.servers[] | "  - \(.id): \(.name) (\(.url))"' "$SERVERS_FILE"
+    jq -r '.servers[] | "  - \(.id): \(.name) (\(.url)) [\(if .enabled == false then "DISABLED" else "ENABLED" end)]"' "$SERVERS_FILE"
 }
 
 # Function to show server details
@@ -69,6 +72,13 @@ deploy_to_server() {
         echo "Error: Server with ID '$server_id' not found"
         list_servers
         exit 1
+    fi
+
+    # Check if server is enabled
+    local enabled=$(echo "$server_info" | jq -r '.enabled // true')
+    if [ "$enabled" = "false" ]; then
+        echo "Skipping disabled server: $server_id"
+        return
     fi
 
     # Extract server details
@@ -163,14 +173,21 @@ if [ "$MODE" = "info" ]; then
     exit 0
 fi
 
+if [ "$MODE" = "version" ]; then
+    echo "xdeployer version $VERSION"
+    exit 0
+fi
+
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
-    echo "Usage: $0 create|update|list|info [server_id|all] [--dev]"
+    echo "xdeployer version $VERSION"
+    echo "Usage: $0 create|update|list|info|version [server_id|all] [--dev]"
     echo ""
     echo "Commands:"
     echo "  create [server_id|all]  - Create a new deployment"
     echo "  update [server_id|all]  - Update an existing deployment"
     echo "  list                    - List available servers"
     echo "  info [server_id]        - Show server details"
+    echo "  version                 - Show version information"
     echo ""
     echo "Options:"
     echo "  --dev                   - Start development server after update (only with update command)"
@@ -204,8 +221,12 @@ cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
 zip -r standalone.zip ./.next/standalone
 
 if [ "$TARGET" = "all" ]; then
-    # Deploy to all servers
-    server_ids=$(jq -r '.servers[].id' "$SERVERS_FILE")
+    # Deploy to all enabled servers
+    server_ids=$(jq -r '.servers[] | select(.enabled != false) | .id' "$SERVERS_FILE")
+    if [ -z "$server_ids" ]; then
+        echo "No enabled servers found."
+        exit 1
+    fi
     for server_id in $server_ids; do
         deploy_to_server "$MODE" "$server_id"
     done

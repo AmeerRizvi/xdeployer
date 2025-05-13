@@ -61,6 +61,7 @@ module.exports = nextConfig;
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ec2-user/apps/my-nextjs-app",
       "url": "http://your-domain-or-ip:3000/",
+      "enabled": true,
       "_comment": "(url is optional)"
     }
   ]
@@ -118,6 +119,7 @@ Each server in `servers.json` has the following properties:
 | `host`       | Server hostname or IP address                                       |
 | `remote_dir` | Directory on the server to deploy to                                |
 | `url`        | URL where the app will be accessible (optional, for reference only) |
+| `enabled`    | Whether the server is enabled for deployment (true/false, required) |
 
 ## EC2 Server Setup
 

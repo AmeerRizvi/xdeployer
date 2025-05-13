@@ -67,6 +67,7 @@ Edit the `servers.json` file that was created in your project root:
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ec2-user/apps/my-nextjs-app",
       "url": "http://your-domain-or-ip:3000/",
+      "enabled": true,
       "_comment": "(url is optional)"
     }
   ]
