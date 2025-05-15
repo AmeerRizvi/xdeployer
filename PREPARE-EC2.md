@@ -12,6 +12,20 @@ The `prepare-ec2` command automates the installation of required software on you
 
 This command saves you time by automatically detecting your Linux distribution and installing the appropriate packages.
 
+## Installation
+
+You can download the prepare-ec2 script directly using curl:
+
+```bash
+# Download the prepare-ec2 script
+curl -L https://raw.githubusercontent.com/AmeerRizvi/xdeployer/main/prepare-ec2.sh -o prepare-ec2.sh
+
+# Make it executable
+chmod +x prepare-ec2.sh
+```
+
+If you've already installed xdeployer, the prepare-ec2 script is included and can be used through the main xdeploy.sh script.
+
 ## Requirements
 
 - SSH access to your EC2 instance(s)
@@ -20,7 +34,11 @@ This command saves you time by automatically detecting your Linux distribution a
 
 ## Usage
 
-### Prepare a specific EC2 instance
+You can use the prepare-ec2 functionality in two ways: through the main xdeploy.sh script or by using the prepare-ec2.sh script directly.
+
+### Using xdeploy.sh (recommended)
+
+#### Prepare a specific EC2 instance
 
 ```bash
 sh xdeploy.sh prepare-ec2 production
@@ -28,13 +46,37 @@ sh xdeploy.sh prepare-ec2 production
 
 This will connect to the server with ID "production" and install all required software.
 
-### Prepare all EC2 instances
+#### Prepare all EC2 instances
 
 ```bash
 sh xdeploy.sh prepare-ec2 all
 ```
 
 This will prepare all enabled servers defined in your `servers.json` file.
+
+### Using prepare-ec2.sh directly
+
+If you've downloaded only the prepare-ec2.sh script, you can use it directly:
+
+```bash
+# Prepare a specific EC2 instance
+sh prepare-ec2.sh production
+
+# Prepare all EC2 instances
+sh prepare-ec2.sh all
+```
+
+Note: When using the script directly, make sure you have a valid `servers.json` file in the same directory.
+
+If you need a template for the servers.json file, you can download it with:
+
+```bash
+# Download the servers.json template
+curl -L https://raw.githubusercontent.com/AmeerRizvi/xdeployer/main/servers.json.template -o servers.json
+
+# Edit the file with your server details
+nano servers.json
+```
 
 ## What Gets Installed
 
