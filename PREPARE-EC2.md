@@ -103,7 +103,7 @@ PM2 is a production process manager for Node.js applications that allows you to:
 
 #### PM2 Log Rotation
 
-The script also configures PM2's log rotation with the following settings:
+The script checks if the PM2 logrotate module is already installed. If not, it installs the module and configures it with the following settings:
 
 - Daily rotation (at midnight)
 - No log deletion (logs are kept forever)
@@ -111,7 +111,9 @@ The script also configures PM2's log rotation with the following settings:
 - Compressed log archives
 - Date format: YYYY-MM-DD_HH-mm-ss
 
-This ensures your application logs are properly managed without losing historical data.
+Even if PM2 is already installed, the script will still check for and configure the logrotate module to ensure your application logs are properly managed without losing historical data.
+
+The script verifies the configuration by displaying the current PM2 logrotate settings after applying the changes.
 
 ### Bun
 
@@ -160,8 +162,9 @@ The script intelligently handles existing software installations:
 - **PM2**:
 
   - If not installed: Installs the latest version
-  - If already installed: Updates to the latest version
-  - In both cases: Configures log rotation
+  - If already installed: Keeps the existing version
+  - In both cases: Checks for PM2 logrotate module and installs if missing
+  - In both cases: Configures log rotation with daily rotation and no deletion
 
 - **Bun**:
   - If not installed: Installs the latest version

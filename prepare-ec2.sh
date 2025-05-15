@@ -161,23 +161,18 @@ install_pm2() {
     pm2 --version
 
     # Configure PM2 log rotation with daily rotation and no deletion
+    echo "Checking PM2 log rotation module..."
+
+    # Check if PM2 logrotate module is already installed
+    if pm2 list | grep -q "pm2-logrotate"; then
+        echo "PM2 logrotate module is already installed. Updating configuration..."
+    else
+        echo "Installing PM2 logrotate module..."
+        # Install PM2 logrotate module
+        pm2 install pm2-logrotate
+    fi
+
     echo "Configuring PM2 log rotation (daily rotation, no deletion)..."
-
-    # Create PM2 log rotation configuration
-    cat > /tmp/pm2-logrotate-config.json <<EOL
-{
-  "max_size": "10M",
-  "retain": "all",
-  "compress": true,
-  "dateFormat": "YYYY-MM-DD_HH-mm-ss",
-  "rotateModule": true,
-  "workerInterval": "30",
-  "rotateInterval": "0 0 * * *"
-}
-EOL
-
-    # Install PM2 logrotate module if not already installed
-    pm2 install pm2-logrotate
 
     # Apply the configuration
     pm2 set pm2-logrotate:max_size 10M
@@ -187,6 +182,10 @@ EOL
     pm2 set pm2-logrotate:rotateModule true
     pm2 set pm2-logrotate:workerInterval 30
     pm2 set pm2-logrotate:rotateInterval "0 0 * * *"
+
+    # Verify the configuration
+    echo "Current PM2 logrotate configuration:"
+    pm2 conf | grep -A 8 "pm2-logrotate:"
 
     echo "PM2 installed and log rotation configured successfully."
     return 0
@@ -258,10 +257,35 @@ else
     install_nodejs
 fi
 
-# Install PM2
+# Install PM2 and configure log rotation
 if command -v pm2 &>/dev/null; then
     echo "PM2 is already installed."
     pm2 --version
+
+    # Even if PM2 is already installed, we still want to configure log rotation
+    echo "Checking and configuring PM2 log rotation..."
+
+    # Check if PM2 logrotate module is already installed
+    if pm2 list | grep -q "pm2-logrotate"; then
+        echo "PM2 logrotate module is already installed. Updating configuration..."
+    else
+        echo "Installing PM2 logrotate module..."
+        # Install PM2 logrotate module
+        pm2 install pm2-logrotate
+    fi
+
+    # Apply the configuration
+    pm2 set pm2-logrotate:max_size 10M
+    pm2 set pm2-logrotate:retain all
+    pm2 set pm2-logrotate:compress true
+    pm2 set pm2-logrotate:dateFormat YYYY-MM-DD_HH-mm-ss
+    pm2 set pm2-logrotate:rotateModule true
+    pm2 set pm2-logrotate:workerInterval 30
+    pm2 set pm2-logrotate:rotateInterval "0 0 * * *"
+
+    # Verify the configuration
+    echo "Current PM2 logrotate configuration:"
+    pm2 conf | grep -A 8 "pm2-logrotate:"
 else
     install_pm2
 fi
