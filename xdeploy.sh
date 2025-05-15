@@ -45,20 +45,26 @@ if [ ! -f "$SERVERS_FILE" ]; then
     exit 1
 fi
 
-# Function to check if next.config.js has standalone output configuration
+# Function to check if next.config.js or next.config.ts has standalone output configuration
 check_standalone_config() {
-    if [ ! -f "next.config.js" ]; then
-        echo "Error: next.config.js not found"
+    # Check for next.config.js or next.config.ts
+    CONFIG_FILE=""
+    if [ -f "next.config.js" ]; then
+        CONFIG_FILE="next.config.js"
+    elif [ -f "next.config.ts" ]; then
+        CONFIG_FILE="next.config.ts"
+    else
+        echo "Error: No Next.js configuration file found"
         echo "xdeployer requires Next.js to be configured with standalone output."
-        echo "Please create a next.config.js file with 'output: \"standalone\"' configuration."
+        echo "Please create a next.config.js or next.config.ts file with 'output: \"standalone\"' configuration."
         exit 1
     fi
 
-    # Check if next.config.js contains standalone output configuration
-    if ! grep -q "output.*standalone" "next.config.js"; then
-        echo "Error: next.config.js does not have standalone output configuration"
+    # Check if the config file contains standalone output configuration
+    if ! grep -q "output.*standalone" "$CONFIG_FILE"; then
+        echo "Error: $CONFIG_FILE does not have standalone output configuration"
         echo "xdeployer requires Next.js to be configured with standalone output."
-        echo "Please add the following to your next.config.js:"
+        echo "Please add the following to your $CONFIG_FILE:"
         echo ""
         echo "  output: 'standalone',"
         echo ""
@@ -69,9 +75,15 @@ check_standalone_config() {
         echo "    // other config options..."
         echo "  };"
         echo ""
-        echo "  module.exports = nextConfig;"
+        if [[ "$CONFIG_FILE" == "next.config.js" ]]; then
+            echo "  module.exports = nextConfig;"
+        else
+            echo "  export default nextConfig;"
+        fi
         exit 1
     fi
+
+    echo "Found standalone output configuration in $CONFIG_FILE"
 }
 
 # Function to list all available servers

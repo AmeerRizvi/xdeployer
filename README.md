@@ -16,7 +16,7 @@ xdeployer is a bash script that simplifies the deployment of Next.js application
 
 ## Requirements
 
-- A Next.js application with `output: 'standalone'` in next.config.js
+- A Next.js application with `output: 'standalone'` in next.config.js or next.config.ts
 - SSH access to your EC2 instance(s)
 - PM2 installed on your EC2 instance(s)
 - jq installed on your local machine (for JSON parsing)
@@ -34,7 +34,7 @@ curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz --s
 mv servers.json.template servers.json
 ```
 
-2. Make sure your Next.js project is configured for standalone output. Add this to your `next.config.js`:
+2. Make sure your Next.js project is configured for standalone output. Add this to your `next.config.js` or `next.config.ts`:
 
 ```js
 /** @type {import('next').NextConfig} */
@@ -44,6 +44,18 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+```
+
+For TypeScript projects using `next.config.ts`:
+
+```ts
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "standalone"
+  // other config options...
+};
+
+export default nextConfig;
 ```
 
 3. Configure your servers in `servers.json`:
