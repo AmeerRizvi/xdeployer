@@ -164,7 +164,7 @@ install_pm2() {
     echo "Checking PM2 log rotation module..."
 
     # Check if PM2 logrotate module is already installed
-    if pm2 list | grep -q "pm2-logrotate"; then
+    if pm2 module list 2>/dev/null | grep -q "pm2-logrotate"; then
         echo "PM2 logrotate module is already installed. Updating configuration..."
     else
         echo "Installing PM2 logrotate module..."
@@ -185,7 +185,13 @@ install_pm2() {
 
     # Verify the configuration
     echo "Current PM2 logrotate configuration:"
-    pm2 conf | grep -A 8 "pm2-logrotate:"
+    if pm2 conf 2>/dev/null | grep -q "pm2-logrotate"; then
+        pm2 conf | grep -A 8 "pm2-logrotate:"
+    else
+        echo "PM2 logrotate module configuration not found in pm2 conf."
+        echo "Checking installed modules:"
+        pm2 module list
+    fi
 
     echo "PM2 installed and log rotation configured successfully."
     return 0
@@ -266,7 +272,7 @@ if command -v pm2 &>/dev/null; then
     echo "Checking and configuring PM2 log rotation..."
 
     # Check if PM2 logrotate module is already installed
-    if pm2 list | grep -q "pm2-logrotate"; then
+    if pm2 module list 2>/dev/null | grep -q "pm2-logrotate"; then
         echo "PM2 logrotate module is already installed. Updating configuration..."
     else
         echo "Installing PM2 logrotate module..."
@@ -285,7 +291,13 @@ if command -v pm2 &>/dev/null; then
 
     # Verify the configuration
     echo "Current PM2 logrotate configuration:"
-    pm2 conf | grep -A 8 "pm2-logrotate:"
+    if pm2 conf 2>/dev/null | grep -q "pm2-logrotate"; then
+        pm2 conf | grep -A 8 "pm2-logrotate:"
+    else
+        echo "PM2 logrotate module configuration not found in pm2 conf."
+        echo "Checking installed modules:"
+        pm2 module list
+    fi
 else
     install_pm2
 fi
