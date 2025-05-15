@@ -4,10 +4,14 @@
 # A simple deployment script for Next.js applications to EC2 instances using PM2
 #
 # Usage:
-#   Deploy to all servers:
-#     sh xdeploy.sh create|update all
-#   Deploy to a specific server:
-#     sh xdeploy.sh create|update server1
+#   Create a new deployment to all servers:
+#     sh xdeploy.sh create all
+#   Create a new deployment to a specific server:
+#     sh xdeploy.sh create server1
+#   Update an existing deployment to all servers:
+#     sh xdeploy.sh update all
+#   Update an existing deployment to a specific server:
+#     sh xdeploy.sh update server1
 #   List available servers:
 #     sh xdeploy.sh list
 #   Show server details:
@@ -40,6 +44,35 @@ if [ ! -f "$SERVERS_FILE" ]; then
     echo "Error: $SERVERS_FILE not found"
     exit 1
 fi
+
+# Function to check if next.config.js has standalone output configuration
+check_standalone_config() {
+    if [ ! -f "next.config.js" ]; then
+        echo "Error: next.config.js not found"
+        echo "xdeployer requires Next.js to be configured with standalone output."
+        echo "Please create a next.config.js file with 'output: \"standalone\"' configuration."
+        exit 1
+    fi
+
+    # Check if next.config.js contains standalone output configuration
+    if ! grep -q "output.*standalone" "next.config.js"; then
+        echo "Error: next.config.js does not have standalone output configuration"
+        echo "xdeployer requires Next.js to be configured with standalone output."
+        echo "Please add the following to your next.config.js:"
+        echo ""
+        echo "  output: 'standalone',"
+        echo ""
+        echo "Example:"
+        echo "  /** @type {import('next').NextConfig} */"
+        echo "  const nextConfig = {"
+        echo "    output: 'standalone',"
+        echo "    // other config options..."
+        echo "  };"
+        echo ""
+        echo "  module.exports = nextConfig;"
+        exit 1
+    fi
+}
 
 # Function to list all available servers
 list_servers() {
@@ -96,6 +129,9 @@ deploy_to_server() {
     echo "Mode: $mode"
     echo "App: $app_name"
     echo "Host: $host"
+
+    # Check if next.config.js has standalone output configuration
+    check_standalone_config
 
     # Build the application if not already built
     if [ ! -d ".next/standalone" ]; then
@@ -216,6 +252,9 @@ if [ -z "$TARGET" ]; then
     list_servers
     exit 1
 fi
+
+# Check if next.config.js has standalone output configuration
+check_standalone_config
 
 # Build the application
 echo "Building application..."
