@@ -92,7 +92,7 @@ The script installs Node.js 22.x (the latest LTS version) and npm using the appr
 PM2 is installed globally using npm:
 
 ```bash
-sudo npm install -g pm2
+sudo npm install -g pm2@latest
 ```
 
 PM2 is a production process manager for Node.js applications that allows you to:
@@ -100,6 +100,18 @@ PM2 is a production process manager for Node.js applications that allows you to:
 - Keep applications alive forever
 - Reload applications without downtime
 - Manage application logging, monitoring, and clustering
+
+#### PM2 Log Rotation
+
+The script also configures PM2's log rotation with the following settings:
+
+- Daily rotation (at midnight)
+- No log deletion (logs are kept forever)
+- 10MB maximum log file size
+- Compressed log archives
+- Date format: YYYY-MM-DD_HH-mm-ss
+
+This ensures your application logs are properly managed without losing historical data.
 
 ### Bun
 
@@ -128,8 +140,33 @@ For other distributions, you may need to install the required software manually.
 1. The script connects to your EC2 instance via SSH
 2. It detects the Linux distribution
 3. It checks if each required software is already installed
-4. It installs any missing software using the appropriate method
-5. It verifies each installation by checking the version
+   - For Node.js: If version 22.x or higher is already installed, it skips installation
+   - For PM2: If already installed, it updates to the latest version
+   - For Bun: If already installed, it updates to the latest version
+4. It installs or updates software using the appropriate method
+5. It configures PM2 log rotation for daily rotation with no log deletion
+6. It verifies each installation by checking the version
+
+### Version Handling
+
+The script intelligently handles existing software installations:
+
+- **Node.js**:
+
+  - If not installed: Installs Node.js 22.x (latest LTS)
+  - If older than 22.x: Upgrades to Node.js 22.x
+  - If 22.x or newer: Keeps the existing version
+
+- **PM2**:
+
+  - If not installed: Installs the latest version
+  - If already installed: Updates to the latest version
+  - In both cases: Configures log rotation
+
+- **Bun**:
+  - If not installed: Installs the latest version
+  - If already installed: Updates to the latest version using `bun upgrade`
+  - Ensures Bun is added to PATH in .bashrc and/or .zshrc
 
 ## Troubleshooting
 
@@ -191,7 +228,18 @@ sudo apt-get install -y nodejs
 ### PM2
 
 ```bash
-sudo npm install -g pm2
+# Install PM2
+sudo npm install -g pm2@latest
+
+# Install and configure PM2 log rotation
+pm2 install pm2-logrotate
+pm2 set pm2-logrotate:max_size 10M
+pm2 set pm2-logrotate:retain all
+pm2 set pm2-logrotate:compress true
+pm2 set pm2-logrotate:dateFormat YYYY-MM-DD_HH-mm-ss
+pm2 set pm2-logrotate:rotateModule true
+pm2 set pm2-logrotate:workerInterval 30
+pm2 set pm2-logrotate:rotateInterval "0 0 * * *"
 ```
 
 ### Bun

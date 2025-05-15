@@ -94,7 +94,27 @@ echo "Detected OS: $OS $VERSION"
 
 # Install Node.js and npm based on the OS
 install_nodejs() {
-    echo "Installing Node.js and npm..."
+    echo "Checking Node.js and npm..."
+
+    # Check if Node.js is already installed and get its version
+    if command -v node &>/dev/null; then
+        current_version=$(node -v | cut -d 'v' -f 2)
+        echo "Current Node.js version: $current_version"
+
+        # Parse major version number
+        major_version=$(echo $current_version | cut -d '.' -f 1)
+
+        # If current version is 22 or higher, skip installation
+        if [ "$major_version" -ge 22 ]; then
+            echo "Node.js version $current_version is already up to date (>= 22.x)."
+            npm -v
+            return 0
+        else
+            echo "Node.js version $current_version is older than 22.x. Upgrading..."
+        fi
+    else
+        echo "Node.js is not installed. Installing version 22.x..."
+    fi
 
     if [[ "$OS" == *"Amazon Linux"* ]] || [[ "$OS" == *"CentOS"* ]] || [[ "$OS" == *"Red Hat"* ]]; then
         # Amazon Linux, CentOS, RHEL
@@ -111,7 +131,9 @@ install_nodejs() {
     fi
 
     # Verify installation
+    echo "Installed Node.js version:"
     node -v
+    echo "Installed npm version:"
     npm -v
 
     echo "Node.js and npm installed successfully."
@@ -120,27 +142,105 @@ install_nodejs() {
 
 # Install PM2 globally
 install_pm2() {
-    echo "Installing PM2 globally..."
-    sudo npm install -g pm2
+    echo "Checking PM2..."
+
+    # Check if PM2 is already installed
+    if command -v pm2 &>/dev/null; then
+        current_version=$(pm2 --version)
+        echo "Current PM2 version: $current_version"
+        echo "Updating PM2 to the latest version..."
+    else
+        echo "PM2 is not installed. Installing the latest version..."
+    fi
+
+    # Install or update PM2 to the latest version
+    sudo npm install -g pm2@latest
 
     # Verify installation
+    echo "Installed PM2 version:"
     pm2 --version
 
-    echo "PM2 installed successfully."
+    # Configure PM2 log rotation with daily rotation and no deletion
+    echo "Configuring PM2 log rotation (daily rotation, no deletion)..."
+
+    # Create PM2 log rotation configuration
+    cat > /tmp/pm2-logrotate-config.json <<EOL
+{
+  "max_size": "10M",
+  "retain": "all",
+  "compress": true,
+  "dateFormat": "YYYY-MM-DD_HH-mm-ss",
+  "rotateModule": true,
+  "workerInterval": "30",
+  "rotateInterval": "0 0 * * *"
+}
+EOL
+
+    # Install PM2 logrotate module if not already installed
+    pm2 install pm2-logrotate
+
+    # Apply the configuration
+    pm2 set pm2-logrotate:max_size 10M
+    pm2 set pm2-logrotate:retain all
+    pm2 set pm2-logrotate:compress true
+    pm2 set pm2-logrotate:dateFormat YYYY-MM-DD_HH-mm-ss
+    pm2 set pm2-logrotate:rotateModule true
+    pm2 set pm2-logrotate:workerInterval 30
+    pm2 set pm2-logrotate:rotateInterval "0 0 * * *"
+
+    echo "PM2 installed and log rotation configured successfully."
     return 0
 }
 
 # Install Bun
 install_bun() {
-    echo "Installing Bun..."
-    curl -fsSL https://bun.sh/install | bash
+    echo "Checking Bun..."
+
+    # Check if Bun is already installed
+    if command -v bun &>/dev/null; then
+        current_version=$(bun --version)
+        echo "Current Bun version: $current_version"
+        echo "Updating Bun to the latest version..."
+
+        # Update Bun to the latest version if already installed
+        if [ -d "$HOME/.bun" ]; then
+            echo "Updating via bun upgrade..."
+            export BUN_INSTALL="$HOME/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH"
+            bun upgrade
+        else
+            echo "Reinstalling Bun to get the latest version..."
+            curl -fsSL https://bun.sh/install | bash
+        fi
+    else
+        echo "Bun is not installed. Installing the latest version..."
+        curl -fsSL https://bun.sh/install | bash
+    fi
 
     # Add Bun to PATH for the current session
     export BUN_INSTALL="$HOME/.bun"
     export PATH="$BUN_INSTALL/bin:$PATH"
 
     # Verify installation
+    echo "Installed Bun version:"
     bun --version
+
+    # Add Bun to .bashrc or .zshrc if not already there
+    if [ -f "$HOME/.bashrc" ]; then
+        if ! grep -q "BUN_INSTALL" "$HOME/.bashrc"; then
+            echo "Adding Bun to PATH in .bashrc..."
+            echo 'export BUN_INSTALL="$HOME/.bun"' >> "$HOME/.bashrc"
+            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> "$HOME/.bashrc"
+        fi
+    fi
+
+    if [ -f "$HOME/.zshrc" ]; then
+        if ! grep -q "BUN_INSTALL" "$HOME/.zshrc"; then
+            echo "Adding Bun to PATH in .zshrc..."
+            echo 'export BUN_INSTALL="$HOME/.bun"' >> "$HOME/.zshrc"
+            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> "$HOME/.zshrc"
+        fi
+    fi
 
     echo "Bun installed successfully."
     return 0
