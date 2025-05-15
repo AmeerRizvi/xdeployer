@@ -98,6 +98,16 @@ sh xdeploy.sh list
 sh xdeploy.sh info production
 ```
 
+### Prepare EC2 instance
+
+```bash
+# Prepare a specific EC2 instance
+sh xdeploy.sh prepare-ec2 production
+
+# Prepare all EC2 instances
+sh xdeploy.sh prepare-ec2 all
+```
+
 ### Start development server after update
 
 ```bash
@@ -129,6 +139,14 @@ Before deploying, make sure your EC2 instance has:
 2. PM2 installed globally (`npm install -g pm2`)
 3. SSH access configured
 4. Proper security group settings to allow traffic on your app's port
+
+You can automatically prepare your EC2 instance with the required software using:
+
+```bash
+sh xdeploy.sh prepare-ec2 your-server-id
+```
+
+This will install Node.js, npm, PM2, and Bun on your EC2 instance. For more details, see [PREPARE-EC2.md](PREPARE-EC2.md).
 
 ## License
 

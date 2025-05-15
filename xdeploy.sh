@@ -14,6 +14,8 @@
 #     sh xdeploy.sh info server1
 #   Start dev server after update:
 #     sh xdeploy.sh update server1 --dev
+#   Prepare EC2 instance:
+#     sh xdeploy.sh prepare-ec2 server1
 
 set -e
 
@@ -178,19 +180,32 @@ if [ "$MODE" = "version" ]; then
     exit 0
 fi
 
+if [ "$MODE" = "prepare-ec2" ]; then
+    if [ -z "$TARGET" ]; then
+        echo "Error: Please specify a server ID or 'all'"
+        list_servers
+        exit 1
+    fi
+
+    # Execute the prepare-ec2.sh script with the target server
+    sh "$SCRIPT_DIR/prepare-ec2.sh" "$TARGET"
+    exit 0
+fi
+
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "xdeployer version $VERSION"
-    echo "Usage: $0 create|update|list|info|version [server_id|all] [--dev]"
+    echo "Usage: $0 create|update|list|info|prepare-ec2|version [server_id|all] [--dev]"
     echo ""
     echo "Commands:"
-    echo "  create [server_id|all]  - Create a new deployment"
-    echo "  update [server_id|all]  - Update an existing deployment"
-    echo "  list                    - List available servers"
-    echo "  info [server_id]        - Show server details"
-    echo "  version                 - Show version information"
+    echo "  create [server_id|all]      - Create a new deployment"
+    echo "  update [server_id|all]      - Update an existing deployment"
+    echo "  list                        - List available servers"
+    echo "  info [server_id]            - Show server details"
+    echo "  prepare-ec2 [server_id|all] - Prepare EC2 instance with npm, pm2, and bun"
+    echo "  version                     - Show version information"
     echo ""
     echo "Options:"
-    echo "  --dev                   - Start development server after update (only with update command)"
+    echo "  --dev                       - Start development server after update (only with update command)"
     echo ""
     list_servers
     exit 1
