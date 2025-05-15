@@ -69,7 +69,7 @@ prepare_ec2_server() {
     echo "This will install Node.js, npm, PM2, and Bun on the server."
     echo "Server: $host"
     echo "User: $user"
-    
+
     # Execute remote commands to prepare the EC2 instance
     ssh -i "$key_path" "$user@$host" <<'EOF'
 #!/bin/bash
@@ -95,25 +95,25 @@ echo "Detected OS: $OS $VERSION"
 # Install Node.js and npm based on the OS
 install_nodejs() {
     echo "Installing Node.js and npm..."
-    
+
     if [[ "$OS" == *"Amazon Linux"* ]] || [[ "$OS" == *"CentOS"* ]] || [[ "$OS" == *"Red Hat"* ]]; then
         # Amazon Linux, CentOS, RHEL
-        curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+        curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash -
         sudo yum install -y nodejs
     elif [[ "$OS" == *"Ubuntu"* ]] || [[ "$OS" == *"Debian"* ]]; then
         # Ubuntu, Debian
-        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
         sudo apt-get install -y nodejs
     else
         echo "Unsupported OS for automatic Node.js installation."
         echo "Please install Node.js manually according to your OS."
         return 1
     fi
-    
+
     # Verify installation
     node -v
     npm -v
-    
+
     echo "Node.js and npm installed successfully."
     return 0
 }
@@ -122,10 +122,10 @@ install_nodejs() {
 install_pm2() {
     echo "Installing PM2 globally..."
     sudo npm install -g pm2
-    
+
     # Verify installation
     pm2 --version
-    
+
     echo "PM2 installed successfully."
     return 0
 }
@@ -134,14 +134,14 @@ install_pm2() {
 install_bun() {
     echo "Installing Bun..."
     curl -fsSL https://bun.sh/install | bash
-    
+
     # Add Bun to PATH for the current session
     export BUN_INSTALL="$HOME/.bun"
     export PATH="$BUN_INSTALL/bin:$PATH"
-    
+
     # Verify installation
     bun --version
-    
+
     echo "Bun installed successfully."
     return 0
 }

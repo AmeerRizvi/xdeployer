@@ -40,7 +40,7 @@ This will prepare all enabled servers defined in your `servers.json` file.
 
 ### Node.js and npm
 
-The script installs Node.js 18.x and npm using the appropriate package manager for your Linux distribution:
+The script installs Node.js 22.x (the latest LTS version) and npm using the appropriate package manager for your Linux distribution:
 
 - For Amazon Linux, CentOS, RHEL: Uses `yum`
 - For Ubuntu, Debian: Uses `apt-get`
@@ -54,6 +54,7 @@ sudo npm install -g pm2
 ```
 
 PM2 is a production process manager for Node.js applications that allows you to:
+
 - Keep applications alive forever
 - Reload applications without downtime
 - Manage application logging, monitoring, and clustering
@@ -93,12 +94,14 @@ For other distributions, you may need to install the required software manually.
 ### Permission Issues
 
 If you encounter permission issues, make sure:
+
 - Your SSH key has the correct permissions (typically `chmod 400 your-key.pem`)
 - The user specified in `servers.json` has sudo privileges on the EC2 instance
 
 ### Connection Issues
 
 If you can't connect to your EC2 instance:
+
 - Verify the hostname/IP address in `servers.json`
 - Check that your security groups allow SSH access (port 22)
 - Ensure your SSH key path is correct
@@ -106,6 +109,7 @@ If you can't connect to your EC2 instance:
 ### Installation Failures
 
 If software installation fails:
+
 - Check the error message for specific issues
 - Ensure your EC2 instance has internet access
 - Try installing the software manually to identify any specific issues
@@ -129,14 +133,16 @@ If you prefer to install the required software manually, follow these steps:
 ### Node.js and npm
 
 For Amazon Linux, CentOS, RHEL:
+
 ```bash
-curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash -
 sudo yum install -y nodejs
 ```
 
 For Ubuntu, Debian:
+
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
@@ -153,6 +159,7 @@ curl -fsSL https://bun.sh/install | bash
 ```
 
 Add Bun to your PATH:
+
 ```bash
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
