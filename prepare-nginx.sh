@@ -1,6 +1,13 @@
 #!/bin/bash
 
 # This script sets up Nginx and SSL (Let's Encrypt) on an EC2 instance
+#
+# Download and use this script:
+# ```
+# curl -L https://raw.githubusercontent.com/AmeerRizvi/xdeployer/main/prepare-nginx.sh -o prepare-nginx.sh
+# chmod +x prepare-nginx.sh
+# sh prepare-nginx.sh your.domain.com 7586
+# ```
 
 DOMAIN=$1
 PORT=$2
