@@ -251,9 +251,21 @@ if [ "$MODE" = "prepare-ec2" ]; then
     exit 0
 fi
 
+if [ "$MODE" = "prepare-nginx" ]; then
+    if [ -z "$TARGET" ]; then
+        echo "Error: Please specify a server ID or 'all'"
+        list_servers
+        exit 1
+    fi
+
+    # Execute the prepare-nginx.sh script with the target server
+    sh "$SCRIPT_DIR/prepare-nginx.sh" "$TARGET"
+    exit 0
+fi
+
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "xdeployer version $VERSION"
-    echo "Usage: $0 create|update|list|info|prepare-ec2|version [server_id|all] [--dev]"
+    echo "Usage: $0 create|update|list|info|prepare-ec2|prepare-nginx|version [server_id|all] [--dev]"
     echo ""
     echo "Commands:"
     echo "  create [server_id|all]      - Create a new deployment"
@@ -261,6 +273,7 @@ if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "  list                        - List available servers"
     echo "  info [server_id]            - Show server details"
     echo "  prepare-ec2 [server_id|all] - Prepare EC2 instance with npm, pm2, and bun"
+    echo "  prepare-nginx [server_id|all] - Setup Nginx and SSL for your domain"
     echo "  version                     - Show version information"
     echo ""
     echo "Options:"

@@ -11,9 +11,10 @@
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ec2-user/apps/my-nextjs-app",
       "url": "http://your-domain-or-ip:3000/",
+      "domain": "your-domain.com",
       "hostname": "127.0.0.1",
       "enabled": true,
-      "_comment": "(url and hostname are optional)"
+      "_comment": "(url, domain, and hostname are optional; domain is required for prepare-nginx)"
     },
     {
       "id": "staging",
@@ -24,10 +25,11 @@
       "user": "ubuntu",
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ubuntu/apps/my-nextjs-app-staging",
-      "url": "http://your-staging-domain-or-ip:3001/",
+      "url": "http://staging.your-domain.com:3001/",
+      "domain": "staging.your-domain.com",
       "hostname": "127.0.0.1",
       "enabled": false,
-      "_comment": "(url and hostname are optional)"
+      "_comment": "(url, domain, and hostname are optional; domain is required for prepare-nginx)"
     }
   ]
 }
