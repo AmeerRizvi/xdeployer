@@ -136,11 +136,15 @@ deploy_to_server() {
     local host=$(echo "$server_info" | jq -r '.host')
     local remote_dir=$(echo "$server_info" | jq -r '.remote_dir')
     local url=$(echo "$server_info" | jq -r '.url')
+    local hostname=$(echo "$server_info" | jq -r '.hostname // ""')
 
     echo "=== Deploying to $server_id: $url ==="
     echo "Mode: $mode"
     echo "App: $app_name"
     echo "Host: $host"
+    if [ ! -z "$hostname" ]; then
+        echo "Hostname: $hostname"
+    fi
 
     # Check if next.config.js has standalone output configuration
     check_standalone_config
@@ -192,7 +196,15 @@ export NVM_DIR="\$HOME/.nvm"
 if [[ "$mode" == "create" ]]; then
   echo ">>> Starting new app with PM2..."
   pm2 delete "$app_name" || true
-  pm2 start "NODE_ENV=production PORT=$port node .next/standalone/server.js" --name "$app_name"
+
+  # Prepare the PM2 start command
+  local pm2_cmd="PORT=$port NODE_ENV=production"
+  if [ ! -z "$hostname" ]; then
+    pm2_cmd="HOSTNAME=$hostname $pm2_cmd"
+  fi
+  pm2_cmd="$pm2_cmd node .next/standalone/server.js"
+
+  pm2 start "$pm2_cmd" --name "$app_name"
 else
   echo ">>> Updating app..."
   pm2 restart "$app_name"
