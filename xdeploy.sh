@@ -178,6 +178,13 @@ deploy_to_server() {
     # Create remote directory
     ssh -i "$key_path" "$user@$host" "mkdir -p $remote_dir"
 
+    # Prepare the PM2 start command
+    pm2_cmd="PORT=$port NODE_ENV=production"
+    if [ ! -z "$hostname" ]; then
+        pm2_cmd="HOSTNAME=$hostname $pm2_cmd"
+    fi
+    pm2_cmd="$pm2_cmd node .next/standalone/server.js"
+
     # Copy zip file
     scp -i "$key_path" standalone.zip "$user@$host:$remote_dir/"
 
@@ -196,14 +203,6 @@ export NVM_DIR="\$HOME/.nvm"
 if [[ "$mode" == "create" ]]; then
   echo ">>> Starting new app with PM2..."
   pm2 delete "$app_name" || true
-
-  # Prepare the PM2 start command
-  local pm2_cmd="PORT=$port NODE_ENV=production"
-  if [ ! -z "$hostname" ]; then
-    pm2_cmd="HOSTNAME=$hostname $pm2_cmd"
-  fi
-  pm2_cmd="$pm2_cmd node .next/standalone/server.js"
-
   pm2 start "$pm2_cmd" --name "$app_name"
 else
   echo ">>> Updating app..."
