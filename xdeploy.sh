@@ -79,6 +79,12 @@ download_script() {
     fi
 }
 
+# Function to get the script name with xdeploy prefix
+get_script_name() {
+    local base_name=$1
+    echo "xdeploy-$base_name"
+}
+
 # Function to check if next.config.js or next.config.ts has standalone output configuration
 check_standalone_config() {
     # Check for next.config.js or next.config.ts
@@ -280,11 +286,14 @@ if [ "$MODE" = "prepare-ec2" ]; then
         exit 1
     fi
 
-    # Download the prepare-ec2.sh script if it doesn't exist
-    download_script "prepare-ec2.sh"
+    # Get the script name with xdeploy prefix
+    SCRIPT_NAME=$(get_script_name "prepare-ec2.sh")
 
-    # Execute the prepare-ec2.sh script with the target server
-    sh "$SCRIPT_DIR/prepare-ec2.sh" "$TARGET"
+    # Download the script if it doesn't exist
+    download_script "$SCRIPT_NAME"
+
+    # Execute the script with the target server
+    sh "$SCRIPT_DIR/$SCRIPT_NAME" "$TARGET"
     exit 0
 fi
 
@@ -295,11 +304,14 @@ if [ "$MODE" = "prepare-nginx" ]; then
         exit 1
     fi
 
-    # Download the prepare-nginx.sh script if it doesn't exist
-    download_script "prepare-nginx.sh"
+    # Get the script name with xdeploy prefix
+    SCRIPT_NAME=$(get_script_name "prepare-nginx.sh")
 
-    # Execute the prepare-nginx.sh script with the target server
-    sh "$SCRIPT_DIR/prepare-nginx.sh" "$TARGET"
+    # Download the script if it doesn't exist
+    download_script "$SCRIPT_NAME"
+
+    # Execute the script with the target server
+    sh "$SCRIPT_DIR/$SCRIPT_NAME" "$TARGET"
     exit 0
 fi
 
@@ -310,11 +322,14 @@ if [ "$MODE" = "prepare-nginx-ssl" ]; then
         exit 1
     fi
 
-    # Download the prepare-nginx-ssl.sh script if it doesn't exist
-    download_script "prepare-nginx-ssl.sh"
+    # Get the script name with xdeploy prefix
+    SCRIPT_NAME=$(get_script_name "prepare-nginx-ssl.sh")
 
-    # Execute the prepare-nginx-ssl.sh script with the target server
-    sh "$SCRIPT_DIR/prepare-nginx-ssl.sh" "$TARGET"
+    # Download the script if it doesn't exist
+    download_script "$SCRIPT_NAME"
+
+    # Execute the script with the target server
+    sh "$SCRIPT_DIR/$SCRIPT_NAME" "$TARGET"
     exit 0
 fi
 
@@ -325,11 +340,14 @@ if [ "$MODE" = "update-nginx-proxy" ]; then
         exit 1
     fi
 
-    # Download the update-nginx-proxy-host.sh script if it doesn't exist
-    download_script "update-nginx-proxy-host.sh"
+    # Get the script name with xdeploy prefix
+    SCRIPT_NAME=$(get_script_name "update-nginx-proxy-host.sh")
 
-    # Execute the update-nginx-proxy-host.sh script with the target server
-    sh "$SCRIPT_DIR/update-nginx-proxy-host.sh" "$TARGET"
+    # Download the script if it doesn't exist
+    download_script "$SCRIPT_NAME"
+
+    # Execute the script with the target server
+    sh "$SCRIPT_DIR/$SCRIPT_NAME" "$TARGET"
     exit 0
 fi
 
@@ -340,11 +358,14 @@ if [ "$MODE" = "add-nginx-domain" ]; then
         exit 1
     fi
 
-    # Download the add-nginx-domain.sh script if it doesn't exist
-    download_script "add-nginx-domain.sh"
+    # Get the script name with xdeploy prefix
+    SCRIPT_NAME=$(get_script_name "add-nginx-domain.sh")
 
-    # Execute the add-nginx-domain.sh script with the target server
-    sh "$SCRIPT_DIR/add-nginx-domain.sh" "$TARGET"
+    # Download the script if it doesn't exist
+    download_script "$SCRIPT_NAME"
+
+    # Execute the script with the target server
+    sh "$SCRIPT_DIR/$SCRIPT_NAME" "$TARGET"
     exit 0
 fi
 

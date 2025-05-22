@@ -8,24 +8,25 @@ xdeployer is a collection of bash scripts that simplify the deployment and manag
 
 ## Available Scripts
 
-| Script                         | Description                                           |
-| ------------------------------ | ----------------------------------------------------- |
-| **xdeploy.sh**                 | Main deployment script for Next.js applications       |
-| **prepare-ec2.sh**             | Prepares EC2 instances with Node.js, PM2, and Bun     |
-| **prepare-nginx.sh**           | Sets up Nginx as a reverse proxy for your application |
-| **prepare-nginx-ssl.sh**       | Configures SSL certificates using Let's Encrypt       |
-| **update-nginx-proxy-host.sh** | Updates Nginx proxy configuration                     |
-| **add-nginx-domain.sh**        | Adds domain configuration to Nginx                    |
+| Script                                 | Description                                           |
+| -------------------------------------- | ----------------------------------------------------- |
+| **xdeploy.sh**                         | Main deployment script for Next.js applications       |
+| **xdeploy-prepare-ec2.sh**             | Prepares EC2 instances with Node.js, PM2, and Bun     |
+| **xdeploy-prepare-nginx.sh**           | Sets up Nginx as a reverse proxy for your application |
+| **xdeploy-prepare-nginx-ssl.sh**       | Configures SSL certificates using Let's Encrypt       |
+| **xdeploy-update-nginx-proxy-host.sh** | Updates Nginx proxy configuration                     |
+| **xdeploy-add-nginx-domain.sh**        | Adds domain configuration to Nginx                    |
+| **xdeploy-install.sh**                 | Installation script for xdeployer                     |
 
 For detailed information on each script, see the corresponding README files:
 
 - [README-xdeploy.md](README-xdeploy.md) - Main deployment script
-- [README-prepare-ec2.md](README-prepare-ec2.md) - EC2 instance preparation
-- [README-prepare-nginx.md](README-prepare-nginx.md) - Nginx setup
-- [README-prepare-nginx-ssl.md](README-prepare-nginx-ssl.md) - SSL configuration
-- [README-update-nginx-proxy-host.md](README-update-nginx-proxy-host.md) - Nginx proxy updates
-- [README-add-nginx-domain.md](README-add-nginx-domain.md) - Adding domain to Nginx
-- [README-install.md](README-install.md) - Installation script
+- [README-xdeploy-prepare-ec2.md](README-xdeploy-prepare-ec2.md) - EC2 instance preparation
+- [README-xdeploy-prepare-nginx.md](README-xdeploy-prepare-nginx.md) - Nginx setup
+- [README-xdeploy-prepare-nginx-ssl.md](README-xdeploy-prepare-nginx-ssl.md) - SSL configuration
+- [README-xdeploy-update-nginx-proxy-host.md](README-xdeploy-update-nginx-proxy-host.md) - Nginx proxy updates
+- [README-xdeploy-add-nginx-domain.md](README-xdeploy-add-nginx-domain.md) - Adding domain to Nginx
+- [README-xdeploy-install.md](README-xdeploy-install.md) - Installation script
 
 ## Requirements
 
@@ -41,6 +42,7 @@ For detailed information on each script, see the corresponding README files:
 ```bash
 curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz --strip=1 xdeployer-main/xdeploy.sh xdeployer-main/servers.json.template
 mv servers.json.template servers.json
+chmod +x xdeploy.sh
 ```
 
 2. Configure your servers in `servers.json`
