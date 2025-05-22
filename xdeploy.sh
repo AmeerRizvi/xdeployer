@@ -279,7 +279,7 @@ if [ "$MODE" = "version" ]; then
     exit 0
 fi
 
-if [ "$MODE" = "prepare-ec2" ]; then
+if [ "$MODE" = "setup-server" ] || [ "$MODE" = "prepare-ec2" ]; then
     if [ -z "$TARGET" ]; then
         echo "Error: Please specify a server ID or 'all'"
         list_servers
@@ -287,7 +287,7 @@ if [ "$MODE" = "prepare-ec2" ]; then
     fi
 
     # Get the script name with xdeploy prefix
-    SCRIPT_NAME=$(get_script_name "prepare-ec2.sh")
+    SCRIPT_NAME=$(get_script_name "setup-server.sh")
 
     # Download the script if it doesn't exist
     download_script "$SCRIPT_NAME"
@@ -297,7 +297,7 @@ if [ "$MODE" = "prepare-ec2" ]; then
     exit 0
 fi
 
-if [ "$MODE" = "prepare-nginx" ]; then
+if [ "$MODE" = "setup-nginx" ] || [ "$MODE" = "prepare-nginx" ]; then
     if [ -z "$TARGET" ]; then
         echo "Error: Please specify a server ID or 'all'"
         list_servers
@@ -305,7 +305,7 @@ if [ "$MODE" = "prepare-nginx" ]; then
     fi
 
     # Get the script name with xdeploy prefix
-    SCRIPT_NAME=$(get_script_name "prepare-nginx.sh")
+    SCRIPT_NAME=$(get_script_name "setup-nginx.sh")
 
     # Download the script if it doesn't exist
     download_script "$SCRIPT_NAME"
@@ -315,7 +315,7 @@ if [ "$MODE" = "prepare-nginx" ]; then
     exit 0
 fi
 
-if [ "$MODE" = "prepare-nginx-ssl" ]; then
+if [ "$MODE" = "setup-ssl" ] || [ "$MODE" = "prepare-nginx-ssl" ]; then
     if [ -z "$TARGET" ]; then
         echo "Error: Please specify a server ID or 'all'"
         list_servers
@@ -323,7 +323,7 @@ if [ "$MODE" = "prepare-nginx-ssl" ]; then
     fi
 
     # Get the script name with xdeploy prefix
-    SCRIPT_NAME=$(get_script_name "prepare-nginx-ssl.sh")
+    SCRIPT_NAME=$(get_script_name "setup-ssl.sh")
 
     # Download the script if it doesn't exist
     download_script "$SCRIPT_NAME"
@@ -333,7 +333,7 @@ if [ "$MODE" = "prepare-nginx-ssl" ]; then
     exit 0
 fi
 
-if [ "$MODE" = "update-nginx-proxy" ]; then
+if [ "$MODE" = "update-nginx" ] || [ "$MODE" = "update-nginx-proxy" ]; then
     if [ -z "$TARGET" ]; then
         echo "Error: Please specify a server ID or 'all'"
         list_servers
@@ -341,7 +341,7 @@ if [ "$MODE" = "update-nginx-proxy" ]; then
     fi
 
     # Get the script name with xdeploy prefix
-    SCRIPT_NAME=$(get_script_name "update-nginx-proxy-host.sh")
+    SCRIPT_NAME=$(get_script_name "update-nginx.sh")
 
     # Download the script if it doesn't exist
     download_script "$SCRIPT_NAME"
@@ -351,7 +351,7 @@ if [ "$MODE" = "update-nginx-proxy" ]; then
     exit 0
 fi
 
-if [ "$MODE" = "add-nginx-domain" ]; then
+if [ "$MODE" = "add-domain" ] || [ "$MODE" = "add-nginx-domain" ]; then
     if [ -z "$TARGET" ]; then
         echo "Error: Please specify a server ID or 'all'"
         list_servers
@@ -359,7 +359,7 @@ if [ "$MODE" = "add-nginx-domain" ]; then
     fi
 
     # Get the script name with xdeploy prefix
-    SCRIPT_NAME=$(get_script_name "add-nginx-domain.sh")
+    SCRIPT_NAME=$(get_script_name "add-domain.sh")
 
     # Download the script if it doesn't exist
     download_script "$SCRIPT_NAME"
@@ -378,11 +378,11 @@ if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "  update [server_id|all]           - Update an existing deployment"
     echo "  list                             - List available servers"
     echo "  info [server_id]                 - Show server details"
-    echo "  prepare-ec2 [server_id|all]      - Prepare EC2 instance with npm, pm2, and bun"
-    echo "  prepare-nginx [server_id|all]    - Setup Nginx as a reverse proxy"
-    echo "  prepare-nginx-ssl [server_id|all] - Setup SSL certificates using Let's Encrypt"
-    echo "  update-nginx-proxy [server_id|all] - Update Nginx proxy configuration"
-    echo "  add-nginx-domain [server_id|all] - Add domain configuration to Nginx"
+    echo "  setup-server [server_id|all]      - Prepare EC2 instance with npm, pm2, and bun"
+    echo "  setup-nginx [server_id|all]      - Setup Nginx as a reverse proxy"
+    echo "  setup-ssl [server_id|all]         - Setup SSL certificates using Let's Encrypt"
+    echo "  update-nginx [server_id|all]       - Update Nginx proxy configuration"
+    echo "  add-domain [server_id|all]        - Add domain configuration to Nginx"
     echo "  version                          - Show version information"
     echo ""
     echo "Options:"
