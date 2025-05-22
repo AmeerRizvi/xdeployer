@@ -5,12 +5,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVERS_FILE="$SCRIPT_DIR/servers.json"
 
 if ! command -v jq &>/dev/null; then
-  echo "❌ jq is required. Install it first."; exit 1
+  echo "❌ jq is required. Install it first."
+  exit 1
 fi
 
 TARGET=$1
 if [ -z "$TARGET" ]; then
-  echo "❌ Please specify a server ID or 'all'"; exit 1
+  echo "❌ Please specify a server ID or 'all'"
+  exit 1
 fi
 
 prepare_nginx_server() {
