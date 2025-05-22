@@ -33,6 +33,7 @@ sh xdeploy.sh update production
 | `setup-ssl [server_id\|all]`    | Set up SSL certificates using Let's Encrypt |
 | `update-nginx [server_id\|all]` | Update Nginx proxy configuration            |
 | `add-domain [server_id\|all]`   | Add domain configuration to Nginx           |
+| `view-logs [server_id] [lines]` | View PM2 logs for a specific server         |
 | `version`                       | Show version information                    |
 
 > **Note:** Missing scripts will be automatically downloaded from GitHub when needed.
@@ -95,6 +96,12 @@ sh xdeploy.sh update-nginx production
 
 # Add domain configuration to Nginx
 sh xdeploy.sh add-domain production
+
+# View PM2 logs
+sh xdeploy.sh view-logs production
+
+# View more lines of PM2 logs
+sh xdeploy.sh view-logs production 500
 ```
 
 ### Start development server after update

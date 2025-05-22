@@ -369,6 +369,24 @@ if [ "$MODE" = "add-domain" ] || [ "$MODE" = "add-nginx-domain" ]; then
     exit 0
 fi
 
+if [ "$MODE" = "view-logs" ]; then
+    if [ -z "$TARGET" ]; then
+        echo "Error: Please specify a server ID"
+        list_servers
+        exit 1
+    fi
+
+    # Get the script name with xdeploy prefix
+    SCRIPT_NAME=$(get_script_name "view-logs.sh")
+
+    # Download the script if it doesn't exist
+    download_script "$SCRIPT_NAME"
+
+    # Execute the script with the target server and optional lines parameter
+    sh "$SCRIPT_DIR/$SCRIPT_NAME" "$TARGET" "$3"
+    exit 0
+fi
+
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "xdeployer version $VERSION"
     echo "Usage: $0 command [server_id|all] [options]"
@@ -383,6 +401,7 @@ if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "  setup-ssl [server_id|all]         - Setup SSL certificates using Let's Encrypt"
     echo "  update-nginx [server_id|all]       - Update Nginx proxy configuration"
     echo "  add-domain [server_id|all]        - Add domain configuration to Nginx"
+    echo "  view-logs [server_id] [lines]     - View PM2 logs for a specific server"
     echo "  version                          - Show version information"
     echo ""
     echo "Options:"

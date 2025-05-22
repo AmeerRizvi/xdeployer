@@ -16,6 +16,7 @@ xdeployer is a collection of bash scripts that simplify the deployment and manag
 | **xdeploy-setup-ssl.sh**    | Configures SSL certificates using Let's Encrypt       |
 | **xdeploy-update-nginx.sh** | Updates Nginx proxy configuration                     |
 | **xdeploy-add-domain.sh**   | Adds domain configuration to Nginx                    |
+| **xdeploy-view-logs.sh**    | Views PM2 logs for a specific server                  |
 | **xdeploy-install.sh**      | Installation script for xdeployer                     |
 
 For detailed information on each script, see the corresponding README files:
@@ -26,6 +27,7 @@ For detailed information on each script, see the corresponding README files:
 - [README-xdeploy-setup-ssl.md](README-xdeploy-setup-ssl.md) - SSL configuration
 - [README-xdeploy-update-nginx.md](README-xdeploy-update-nginx.md) - Nginx proxy updates
 - [README-xdeploy-add-domain.md](README-xdeploy-add-domain.md) - Adding domain to Nginx
+- [README-xdeploy-view-logs.md](README-xdeploy-view-logs.md) - Viewing PM2 logs
 - [README-xdeploy-install.md](README-xdeploy-install.md) - Installation script
 
 ## Requirements
@@ -73,6 +75,8 @@ sh xdeploy.sh setup-nginx production      # Set up Nginx
 sh xdeploy.sh setup-ssl production        # Set up SSL with Let's Encrypt
 sh xdeploy.sh update-nginx production     # Update Nginx proxy configuration
 sh xdeploy.sh add-domain production       # Add domain configuration to Nginx
+sh xdeploy.sh view-logs production        # View PM2 logs (last 100 lines)
+sh xdeploy.sh view-logs production 500    # View PM2 logs (last 500 lines)
 ```
 
 > **Note:** Missing scripts will be automatically downloaded from GitHub when needed.
