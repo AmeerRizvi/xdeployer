@@ -8,15 +8,15 @@ xdeployer is a collection of bash scripts that simplify the deployment and manag
 
 ## Available Scripts
 
-| Script                          | Description                                           |
-| ------------------------------- | ----------------------------------------------------- |
-| **xdeploy.sh**                  | Main deployment script for Next.js applications       |
-| **xdeploy-setup-server.sh**     | Prepares servers with Node.js, PM2, and Bun           |
-| **xdeploy-setup-nginx.sh**      | Sets up Nginx as a reverse proxy for your application |
-| **xdeploy-setup-ssl.sh**        | Configures SSL certificates using Let's Encrypt       |
-| **xdeploy-update-nginx.sh**     | Updates Nginx proxy configuration                     |
-| **xdeploy-add-nginx-domain.sh** | Adds domain configuration to Nginx                    |
-| **xdeploy-install.sh**          | Installation script for xdeployer                     |
+| Script                      | Description                                           |
+| --------------------------- | ----------------------------------------------------- |
+| **xdeploy.sh**              | Main deployment script for Next.js applications       |
+| **xdeploy-setup-server.sh** | Prepares servers with Node.js, PM2, and Bun           |
+| **xdeploy-setup-nginx.sh**  | Sets up Nginx as a reverse proxy for your application |
+| **xdeploy-setup-ssl.sh**    | Configures SSL certificates using Let's Encrypt       |
+| **xdeploy-update-nginx.sh** | Updates Nginx proxy configuration                     |
+| **xdeploy-add-domain.sh**   | Adds domain configuration to Nginx                    |
+| **xdeploy-install.sh**      | Installation script for xdeployer                     |
 
 For detailed information on each script, see the corresponding README files:
 
@@ -25,7 +25,7 @@ For detailed information on each script, see the corresponding README files:
 - [README-xdeploy-setup-nginx.md](README-xdeploy-setup-nginx.md) - Nginx setup
 - [README-xdeploy-setup-ssl.md](README-xdeploy-setup-ssl.md) - SSL configuration
 - [README-xdeploy-update-nginx.md](README-xdeploy-update-nginx.md) - Nginx proxy updates
-- [README-xdeploy-add-nginx-domain.md](README-xdeploy-add-nginx-domain.md) - Adding domain to Nginx
+- [README-xdeploy-add-domain.md](README-xdeploy-add-domain.md) - Adding domain to Nginx
 - [README-xdeploy-install.md](README-xdeploy-install.md) - Installation script
 
 ## Requirements
@@ -72,7 +72,7 @@ sh xdeploy.sh setup-server production     # Install Node.js, PM2, Bun
 sh xdeploy.sh setup-nginx production      # Set up Nginx
 sh xdeploy.sh setup-ssl production        # Set up SSL with Let's Encrypt
 sh xdeploy.sh update-nginx production     # Update Nginx proxy configuration
-sh xdeploy.sh add-nginx-domain production  # Add domain configuration to Nginx
+sh xdeploy.sh add-domain production       # Add domain configuration to Nginx
 ```
 
 > **Note:** Missing scripts will be automatically downloaded from GitHub when needed.

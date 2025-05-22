@@ -22,17 +22,18 @@ sh xdeploy.sh update production
 
 ## Commands
 
-| Command                               | Description                                     |
-| ------------------------------------- | ----------------------------------------------- |
-| `create [server_id\|all]`             | Create a new deployment                         |
-| `update [server_id\|all]`             | Update an existing deployment                   |
-| `list`                                | List available servers                          |
-| `info [server_id]`                    | Show server details                             |
-| `prepare-ec2 [server_id\|all]`        | Prepare EC2 instance with Node.js, PM2, and Bun |
-| `prepare-nginx [server_id\|all]`      | Set up Nginx as a reverse proxy                 |
-| `prepare-nginx-ssl [server_id\|all]`  | Set up SSL certificates using Let's Encrypt     |
-| `update-nginx-proxy [server_id\|all]` | Update Nginx proxy configuration                |
-| `version`                             | Show version information                        |
+| Command                         | Description                                 |
+| ------------------------------- | ------------------------------------------- |
+| `create [server_id\|all]`       | Create a new deployment                     |
+| `update [server_id\|all]`       | Update an existing deployment               |
+| `list`                          | List available servers                      |
+| `info [server_id]`              | Show server details                         |
+| `setup-server [server_id\|all]` | Prepare server with Node.js, PM2, and Bun   |
+| `setup-nginx [server_id\|all]`  | Set up Nginx as a reverse proxy             |
+| `setup-ssl [server_id\|all]`    | Set up SSL certificates using Let's Encrypt |
+| `update-nginx [server_id\|all]` | Update Nginx proxy configuration            |
+| `add-domain [server_id\|all]`   | Add domain configuration to Nginx           |
+| `version`                       | Show version information                    |
 
 > **Note:** Missing scripts will be automatically downloaded from GitHub when needed.
 
@@ -77,23 +78,23 @@ sh xdeploy.sh info production
 ### Prepare servers
 
 ```bash
-# Prepare a specific EC2 instance
-sh xdeploy.sh prepare-ec2 production
+# Set up a server with Node.js, PM2, and Bun
+sh xdeploy.sh setup-server production
 
-# Prepare all EC2 instances
-sh xdeploy.sh prepare-ec2 all
+# Set up all servers
+sh xdeploy.sh setup-server all
 
 # Set up Nginx on a specific server
-sh xdeploy.sh prepare-nginx production
+sh xdeploy.sh setup-nginx production
 
 # Set up SSL certificates
-sh xdeploy.sh prepare-nginx-ssl production
+sh xdeploy.sh setup-ssl production
 
 # Update Nginx proxy configuration
-sh xdeploy.sh update-nginx-proxy production
+sh xdeploy.sh update-nginx production
 
 # Add domain configuration to Nginx
-sh xdeploy.sh add-nginx-domain production
+sh xdeploy.sh add-domain production
 ```
 
 ### Start development server after update
