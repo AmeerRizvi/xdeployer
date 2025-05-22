@@ -4,86 +4,45 @@ A simple, powerful deployment tool for Next.js applications to EC2 instances usi
 
 ## Overview
 
-xdeployer is a bash script that simplifies the deployment of Next.js applications to EC2 instances. It handles the build process, transfers the files to your server(s), and manages the application using PM2.
+xdeployer is a collection of bash scripts that simplify the deployment and management of Next.js applications on EC2 instances. The tools handle building, transferring files, configuring servers, and managing applications using PM2.
 
-**Key Features:**
+## Available Scripts
 
-- Deploy to multiple servers with a single command
-- Support for different package managers (npm, yarn, pnpm, bun)
-- Automatic detection of your project's package manager
-- Simple configuration via JSON
-- Works with Next.js standalone output mode
+| Script                         | Description                                           |
+| ------------------------------ | ----------------------------------------------------- |
+| **xdeploy.sh**                 | Main deployment script for Next.js applications       |
+| **prepare-ec2.sh**             | Prepares EC2 instances with Node.js, PM2, and Bun     |
+| **prepare-nginx.sh**           | Sets up Nginx as a reverse proxy for your application |
+| **prepare-nginx-ssl.sh**       | Configures SSL certificates using Let's Encrypt       |
+| **update-nginx-proxy-host.sh** | Updates Nginx proxy configuration                     |
+
+For detailed information on each script, see the corresponding README files:
+
+- [README-xdeploy.md](README-xdeploy.md) - Main deployment script
+- [README-prepare-ec2.md](README-prepare-ec2.md) - EC2 instance preparation
+- [README-prepare-nginx.md](README-prepare-nginx.md) - Nginx setup
+- [README-prepare-nginx-ssl.md](README-prepare-nginx-ssl.md) - SSL configuration
+- [README-update-nginx-proxy-host.md](README-update-nginx-proxy-host.md) - Nginx proxy updates
+- [README-install.md](README-install.md) - Installation script
 
 ## Requirements
 
-- A Next.js application with `output: 'standalone'` in next.config.js or next.config.ts
+- A Next.js application with `output: 'standalone'` in next.config.js/ts
 - SSH access to your EC2 instance(s)
-- PM2 installed on your EC2 instance(s)
 - jq installed on your local machine (for JSON parsing)
 - zip installed on your local machine
 
-## Installation
+## Quick Start
 
-1. Copy the deployment files to your Next.js project:
+1. Download the deployment files:
 
 ```bash
-# Using curl
 curl -L https://github.com/AmeerRizvi/xdeployer/archive/main.tar.gz | tar xz --strip=1 xdeployer-main/xdeploy.sh xdeployer-main/servers.json.template
-
-# Rename the template
 mv servers.json.template servers.json
 ```
 
-2. Make sure your Next.js project is configured for standalone output. Add this to your `next.config.js` or `next.config.ts`:
-
-```js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "standalone"
-  // other config options...
-};
-
-module.exports = nextConfig;
-```
-
-For TypeScript projects using `next.config.ts`:
-
-```ts
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "standalone"
-  // other config options...
-};
-
-export default nextConfig;
-```
-
-3. Configure your servers in `servers.json`:
-
-```json
-{
-  "servers": [
-    {
-      "id": "production",
-      "name": "Production Server",
-      "app_name": "my-nextjs-app",
-      "port": 3000,
-      "key_path": "~/.ssh/your-ec2-key.pem",
-      "user": "ec2-user",
-      "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
-      "remote_dir": "/home/ec2-user/apps/my-nextjs-app",
-      "url": "http://your-domain-or-ip:3000/",
-      "hostname": "127.0.0.1",
-      "enabled": true,
-      "_comment": "(url and hostname are optional)"
-    }
-  ]
-}
-```
-
-## Usage
-
-### Deploy to a server
+2. Configure your servers in `servers.json`
+3. Deploy your application:
 
 ```bash
 # Create a new deployment
@@ -93,74 +52,43 @@ sh xdeploy.sh create production
 sh xdeploy.sh update production
 ```
 
-### Deploy to all servers
+## Main Commands
 
 ```bash
-sh xdeploy.sh create all
-```
+# Deploy commands
+sh xdeploy.sh create production    # Create new deployment
+sh xdeploy.sh update production    # Update existing deployment
 
-### List available servers
+# Server management
+sh xdeploy.sh list                 # List available servers
+sh xdeploy.sh info production      # Show server details
 
-```bash
-sh xdeploy.sh list
-```
-
-### Show server details
-
-```bash
-sh xdeploy.sh info production
-```
-
-### Prepare EC2 instance
-
-```bash
-# Prepare a specific EC2 instance
-sh xdeploy.sh prepare-ec2 production
-
-# Prepare all EC2 instances
-sh xdeploy.sh prepare-ec2 all
-```
-
-### Start development server after update
-
-```bash
-sh xdeploy.sh update production --dev
+# Server preparation
+sh xdeploy.sh prepare-ec2 production      # Install Node.js, PM2, Bun
+sh xdeploy.sh prepare-nginx production    # Set up Nginx
+sh xdeploy.sh prepare-nginx-ssl production # Set up SSL with Let's Encrypt
 ```
 
 ## Server Configuration
 
-Each server in `servers.json` has the following properties:
+Each server in `servers.json` requires these properties:
 
-| Property     | Description                                                         |
-| ------------ | ------------------------------------------------------------------- |
-| `id`         | Unique identifier for the server                                    |
-| `name`       | Human-readable name                                                 |
-| `app_name`   | Name for the PM2 process                                            |
-| `port`       | Port to run the Next.js app on                                      |
-| `key_path`   | Path to your SSH key file                                           |
-| `user`       | SSH username (e.g., ec2-user, ubuntu)                               |
-| `host`       | Server hostname or IP address                                       |
-| `remote_dir` | Directory on the server to deploy to                                |
-| `url`        | URL where the app will be accessible (optional, for reference only) |
-| `hostname`   | Hostname for the Next.js server (optional)                          |
-| `enabled`    | Whether the server is enabled for deployment (true/false, required) |
+| Property     | Description                      | Required |
+| ------------ | -------------------------------- | -------- |
+| `id`         | Unique identifier                | Yes      |
+| `name`       | Human-readable name              | Yes      |
+| `app_name`   | Name for PM2 process             | Yes      |
+| `port`       | Application port                 | Yes      |
+| `key_path`   | Path to SSH key file             | Yes      |
+| `user`       | SSH username                     | Yes      |
+| `host`       | Server hostname/IP               | Yes      |
+| `remote_dir` | Deployment directory             | Yes      |
+| `enabled`    | Enable/disable server            | Yes      |
+| `url`        | Application URL                  | No       |
+| `hostname`   | Next.js hostname                 | No       |
+| `domain`     | Domain name (required for Nginx) | No\*     |
 
-## EC2 Server Setup
-
-Before deploying, make sure your EC2 instance has:
-
-1. Node.js installed
-2. PM2 installed globally (`npm install -g pm2`)
-3. SSH access configured
-4. Proper security group settings to allow traffic on your app's port
-
-You can automatically prepare your EC2 instance with the required software using:
-
-```bash
-sh xdeploy.sh prepare-ec2 your-server-id
-```
-
-This will install Node.js, npm, PM2, and Bun on your EC2 instance. For more details, see [PREPARE-EC2.md](PREPARE-EC2.md).
+\*Required for Nginx/SSL setup
 
 ## License
 
@@ -168,4 +96,4 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this project.
