@@ -26,6 +26,11 @@ set -e
 # Script version
 VERSION="1.0.0"
 
+# GitHub repository information
+GITHUB_REPO="AmeerRizvi/xdeployer"
+GITHUB_BRANCH="main"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH"
+
 # Check if jq is installed
 if ! command -v jq &>/dev/null; then
     echo "Error: jq is required but not installed."
@@ -33,6 +38,16 @@ if ! command -v jq &>/dev/null; then
     echo "  - macOS: brew install jq"
     echo "  - Ubuntu/Debian: sudo apt-get install jq"
     echo "  - CentOS/RHEL: sudo yum install jq"
+    exit 1
+fi
+
+# Check if curl is installed
+if ! command -v curl &>/dev/null; then
+    echo "Error: curl is required but not installed."
+    echo "Please install curl first:"
+    echo "  - macOS: brew install curl"
+    echo "  - Ubuntu/Debian: sudo apt-get install curl"
+    echo "  - CentOS/RHEL: sudo yum install curl"
     exit 1
 fi
 
@@ -44,6 +59,25 @@ if [ ! -f "$SERVERS_FILE" ]; then
     echo "Error: $SERVERS_FILE not found"
     exit 1
 fi
+
+# Function to download a script if it doesn't exist
+download_script() {
+    local script_name=$1
+    local script_path="$SCRIPT_DIR/$script_name"
+
+    if [ ! -f "$script_path" ]; then
+        echo "Script $script_name not found. Downloading from GitHub..."
+        curl -s -L "$GITHUB_RAW_URL/$script_name" -o "$script_path"
+
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to download $script_name"
+            exit 1
+        fi
+
+        chmod +x "$script_path"
+        echo "Downloaded $script_name successfully."
+    fi
+}
 
 # Function to check if next.config.js or next.config.ts has standalone output configuration
 check_standalone_config() {
@@ -246,6 +280,9 @@ if [ "$MODE" = "prepare-ec2" ]; then
         exit 1
     fi
 
+    # Download the prepare-ec2.sh script if it doesn't exist
+    download_script "prepare-ec2.sh"
+
     # Execute the prepare-ec2.sh script with the target server
     sh "$SCRIPT_DIR/prepare-ec2.sh" "$TARGET"
     exit 0
@@ -258,26 +295,63 @@ if [ "$MODE" = "prepare-nginx" ]; then
         exit 1
     fi
 
+    # Download the prepare-nginx.sh script if it doesn't exist
+    download_script "prepare-nginx.sh"
+
     # Execute the prepare-nginx.sh script with the target server
     sh "$SCRIPT_DIR/prepare-nginx.sh" "$TARGET"
     exit 0
 fi
 
+if [ "$MODE" = "prepare-nginx-ssl" ]; then
+    if [ -z "$TARGET" ]; then
+        echo "Error: Please specify a server ID or 'all'"
+        list_servers
+        exit 1
+    fi
+
+    # Download the prepare-nginx-ssl.sh script if it doesn't exist
+    download_script "prepare-nginx-ssl.sh"
+
+    # Execute the prepare-nginx-ssl.sh script with the target server
+    sh "$SCRIPT_DIR/prepare-nginx-ssl.sh" "$TARGET"
+    exit 0
+fi
+
+if [ "$MODE" = "update-nginx-proxy" ]; then
+    if [ -z "$TARGET" ]; then
+        echo "Error: Please specify a server ID or 'all'"
+        list_servers
+        exit 1
+    fi
+
+    # Download the update-nginx-proxy-host.sh script if it doesn't exist
+    download_script "update-nginx-proxy-host.sh"
+
+    # Execute the update-nginx-proxy-host.sh script with the target server
+    sh "$SCRIPT_DIR/update-nginx-proxy-host.sh" "$TARGET"
+    exit 0
+fi
+
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "xdeployer version $VERSION"
-    echo "Usage: $0 create|update|list|info|prepare-ec2|prepare-nginx|version [server_id|all] [--dev]"
+    echo "Usage: $0 command [server_id|all] [options]"
     echo ""
     echo "Commands:"
-    echo "  create [server_id|all]      - Create a new deployment"
-    echo "  update [server_id|all]      - Update an existing deployment"
-    echo "  list                        - List available servers"
-    echo "  info [server_id]            - Show server details"
-    echo "  prepare-ec2 [server_id|all] - Prepare EC2 instance with npm, pm2, and bun"
-    echo "  prepare-nginx [server_id|all] - Setup Nginx and SSL for your domain"
-    echo "  version                     - Show version information"
+    echo "  create [server_id|all]           - Create a new deployment"
+    echo "  update [server_id|all]           - Update an existing deployment"
+    echo "  list                             - List available servers"
+    echo "  info [server_id]                 - Show server details"
+    echo "  prepare-ec2 [server_id|all]      - Prepare EC2 instance with npm, pm2, and bun"
+    echo "  prepare-nginx [server_id|all]    - Setup Nginx as a reverse proxy"
+    echo "  prepare-nginx-ssl [server_id|all] - Setup SSL certificates using Let's Encrypt"
+    echo "  update-nginx-proxy [server_id|all] - Update Nginx proxy configuration"
+    echo "  version                          - Show version information"
     echo ""
     echo "Options:"
-    echo "  --dev                       - Start development server after update (only with update command)"
+    echo "  --dev                            - Start development server after update (only with update command)"
+    echo ""
+    echo "Note: Missing scripts will be automatically downloaded from GitHub."
     echo ""
     list_servers
     exit 1

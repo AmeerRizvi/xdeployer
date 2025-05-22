@@ -22,20 +22,24 @@ sh xdeploy.sh update production
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `create [server_id\|all]` | Create a new deployment |
-| `update [server_id\|all]` | Update an existing deployment |
-| `list` | List available servers |
-| `info [server_id]` | Show server details |
-| `prepare-ec2 [server_id\|all]` | Prepare EC2 instance with Node.js, PM2, and Bun |
-| `prepare-nginx [server_id\|all]` | Set up Nginx as a reverse proxy |
-| `version` | Show version information |
+| Command                               | Description                                     |
+| ------------------------------------- | ----------------------------------------------- |
+| `create [server_id\|all]`             | Create a new deployment                         |
+| `update [server_id\|all]`             | Update an existing deployment                   |
+| `list`                                | List available servers                          |
+| `info [server_id]`                    | Show server details                             |
+| `prepare-ec2 [server_id\|all]`        | Prepare EC2 instance with Node.js, PM2, and Bun |
+| `prepare-nginx [server_id\|all]`      | Set up Nginx as a reverse proxy                 |
+| `prepare-nginx-ssl [server_id\|all]`  | Set up SSL certificates using Let's Encrypt     |
+| `update-nginx-proxy [server_id\|all]` | Update Nginx proxy configuration                |
+| `version`                             | Show version information                        |
+
+> **Note:** Missing scripts will be automatically downloaded from GitHub when needed.
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
+| Option  | Description                                                      |
+| ------- | ---------------------------------------------------------------- |
 | `--dev` | Start development server after update (only with update command) |
 
 ## Examples
@@ -81,6 +85,12 @@ sh xdeploy.sh prepare-ec2 all
 
 # Set up Nginx on a specific server
 sh xdeploy.sh prepare-nginx production
+
+# Set up SSL certificates
+sh xdeploy.sh prepare-nginx-ssl production
+
+# Update Nginx proxy configuration
+sh xdeploy.sh update-nginx-proxy production
 ```
 
 ### Start development server after update
@@ -145,6 +155,7 @@ Configure your servers in `servers.json`:
 ### Build Failures
 
 If the build fails:
+
 - Check your Next.js configuration
 - Ensure you have the necessary dependencies installed
 - Verify that your project builds locally with `npm run build`
@@ -152,6 +163,7 @@ If the build fails:
 ### Deployment Failures
 
 If deployment fails:
+
 - Check your SSH key permissions (should be `chmod 400 your-key.pem`)
 - Verify the server details in `servers.json`
 - Ensure the remote directory is writable by the specified user
@@ -160,6 +172,7 @@ If deployment fails:
 ### PM2 Issues
 
 If PM2 fails to start or restart your application:
+
 - SSH into your server and check PM2 logs: `pm2 logs your-app-name`
 - Verify that PM2 is installed globally: `npm list -g pm2`
 - Check if the port is already in use: `sudo lsof -i :3000`

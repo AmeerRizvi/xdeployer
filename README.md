@@ -67,7 +67,10 @@ sh xdeploy.sh info production      # Show server details
 sh xdeploy.sh prepare-ec2 production      # Install Node.js, PM2, Bun
 sh xdeploy.sh prepare-nginx production    # Set up Nginx
 sh xdeploy.sh prepare-nginx-ssl production # Set up SSL with Let's Encrypt
+sh xdeploy.sh update-nginx-proxy production # Update Nginx proxy configuration
 ```
+
+> **Note:** Missing scripts will be automatically downloaded from GitHub when needed.
 
 ## Server Configuration
 
