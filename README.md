@@ -15,6 +15,7 @@ xdeployer is a collection of bash scripts that simplify the deployment and manag
 | **prepare-nginx.sh**           | Sets up Nginx as a reverse proxy for your application |
 | **prepare-nginx-ssl.sh**       | Configures SSL certificates using Let's Encrypt       |
 | **update-nginx-proxy-host.sh** | Updates Nginx proxy configuration                     |
+| **add-nginx-domain.sh**        | Adds domain configuration to Nginx                    |
 
 For detailed information on each script, see the corresponding README files:
 
@@ -23,6 +24,7 @@ For detailed information on each script, see the corresponding README files:
 - [README-prepare-nginx.md](README-prepare-nginx.md) - Nginx setup
 - [README-prepare-nginx-ssl.md](README-prepare-nginx-ssl.md) - SSL configuration
 - [README-update-nginx-proxy-host.md](README-update-nginx-proxy-host.md) - Nginx proxy updates
+- [README-add-nginx-domain.md](README-add-nginx-domain.md) - Adding domain to Nginx
 - [README-install.md](README-install.md) - Installation script
 
 ## Requirements
@@ -68,6 +70,7 @@ sh xdeploy.sh prepare-ec2 production      # Install Node.js, PM2, Bun
 sh xdeploy.sh prepare-nginx production    # Set up Nginx
 sh xdeploy.sh prepare-nginx-ssl production # Set up SSL with Let's Encrypt
 sh xdeploy.sh update-nginx-proxy production # Update Nginx proxy configuration
+sh xdeploy.sh add-nginx-domain production  # Add domain configuration to Nginx
 ```
 
 > **Note:** Missing scripts will be automatically downloaded from GitHub when needed.

@@ -333,6 +333,21 @@ if [ "$MODE" = "update-nginx-proxy" ]; then
     exit 0
 fi
 
+if [ "$MODE" = "add-nginx-domain" ]; then
+    if [ -z "$TARGET" ]; then
+        echo "Error: Please specify a server ID or 'all'"
+        list_servers
+        exit 1
+    fi
+
+    # Download the add-nginx-domain.sh script if it doesn't exist
+    download_script "add-nginx-domain.sh"
+
+    # Execute the add-nginx-domain.sh script with the target server
+    sh "$SCRIPT_DIR/add-nginx-domain.sh" "$TARGET"
+    exit 0
+fi
+
 if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "xdeployer version $VERSION"
     echo "Usage: $0 command [server_id|all] [options]"
@@ -346,6 +361,7 @@ if [[ "$MODE" != "create" && "$MODE" != "update" ]]; then
     echo "  prepare-nginx [server_id|all]    - Setup Nginx as a reverse proxy"
     echo "  prepare-nginx-ssl [server_id|all] - Setup SSL certificates using Let's Encrypt"
     echo "  update-nginx-proxy [server_id|all] - Update Nginx proxy configuration"
+    echo "  add-nginx-domain [server_id|all] - Add domain configuration to Nginx"
     echo "  version                          - Show version information"
     echo ""
     echo "Options:"

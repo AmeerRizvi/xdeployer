@@ -91,6 +91,9 @@ sh xdeploy.sh prepare-nginx-ssl production
 
 # Update Nginx proxy configuration
 sh xdeploy.sh update-nginx-proxy production
+
+# Add domain configuration to Nginx
+sh xdeploy.sh add-nginx-domain production
 ```
 
 ### Start development server after update
