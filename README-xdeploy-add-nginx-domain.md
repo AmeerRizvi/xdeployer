@@ -56,6 +56,7 @@ Your `servers.json` file must include:
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "domain": "your-domain.com",
       "port": 3000,
+      "hostname": "172.31.14.83",
       "enabled": true
     }
   ]
@@ -63,8 +64,10 @@ Your `servers.json` file must include:
 ```
 
 The script requires the following fields:
+
 - `domain`: The domain name for the Nginx configuration
 - `port`: The port your application is running on
+- `hostname`: The hostname or IP address to proxy to (defaults to "127.0.0.1" if not provided)
 
 ## How It Works
 
@@ -84,7 +87,7 @@ server {
     server_name your-domain.com www.your-domain.com;
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://172.31.14.83:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -111,12 +114,14 @@ If the Nginx configuration test fails, the script will not reload Nginx. You sho
 ### Permission Issues
 
 If you encounter permission issues:
+
 - Check SSH key permissions (`chmod 400 your-key.pem`)
 - Ensure the user has sudo privileges on the EC2 instance
 
 ### Connection Issues
 
 If you can't connect to your EC2 instance:
+
 - Verify the hostname/IP address in `servers.json`
 - Check that your security groups allow SSH access (port 22)
 - Ensure your SSH key path is correct
@@ -124,6 +129,7 @@ If you can't connect to your EC2 instance:
 ## Next Steps
 
 After adding the Nginx domain configuration, you can:
+
 1. Set up SSL certificates using `prepare-nginx-ssl.sh`
 2. Deploy your Next.js application using `xdeploy.sh create production`
 3. Access your application via your domain name

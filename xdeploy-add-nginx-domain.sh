@@ -36,16 +36,18 @@ add_nginx_domain() {
   local host=$(echo "$server_info" | jq -r '.host')
   local port=$(echo "$server_info" | jq -r '.port')
   local domain=$(echo "$server_info" | jq -r '.domain // ""')
+  local hostname=$(echo "$server_info" | jq -r '.hostname // "127.0.0.1"')
 
   [ -z "$domain" ] && echo "❌ No domain provided for server '$server_id'" && return
   [ -z "$port" ] && echo "❌ No port provided for server '$server_id'" && return
 
-  echo "🔧 Adding Nginx configuration for $domain on $host"
+  echo "🔧 Adding Nginx configuration for $domain on $host (proxy to $hostname:$port)"
 
-  ssh -i "$key_path" "$user@$host" bash -s -- "$domain" "$port" <<'ENDSSH'
+  ssh -i "$key_path" "$user@$host" bash -s -- "$domain" "$port" "$hostname" <<'ENDSSH'
     set -e
     DOMAIN="$1"
     PORT="$2"
+    HOSTNAME="$3"
 
     # Check if Nginx is installed
     if ! command -v nginx &>/dev/null; then
@@ -78,7 +80,7 @@ server {
     server_name $DOMAIN www.$DOMAIN;
 
     location / {
-        proxy_pass http://127.0.0.1:$PORT;
+        proxy_pass http://$HOSTNAME:$PORT;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
