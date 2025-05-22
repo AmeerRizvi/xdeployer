@@ -49,7 +49,7 @@ prepare_nginx_server() {
     sudo systemctl start nginx
 
     sudo mkdir -p /etc/nginx/conf.d/
-    cat <<EOF | sudo tee /etc/nginx/conf.d/$DOMAIN.conf
+    cat <<EOF | sudo tee /etc/nginx/conf.d/$DOMAIN.conf >/dev/null
 server {
     listen 80;
     server_name $DOMAIN www.$DOMAIN;
