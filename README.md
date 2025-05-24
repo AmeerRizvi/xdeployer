@@ -1,10 +1,8 @@
 # xdeployer
 
-A simple, powerful deployment tool for Next.js applications to EC2 instances using PM2.
+A simple deployment tool for Next.js applications to EC2 instances using PM2.
 
-## Overview
-
-xdeployer is a collection of bash scripts that simplify the deployment and management of Next.js applications on EC2 instances. The tools handle building, transferring files, configuring servers, and managing applications using PM2.
+xdeployer is a collection of bash scripts that simplify the deployment and management of Next.js applications on EC2 instances.
 
 ## Available Scripts
 
@@ -17,7 +15,7 @@ xdeployer is a collection of bash scripts that simplify the deployment and manag
 | **xdeploy-update-nginx-proxy.sh** | Updates Nginx proxy configuration                     |
 | **xdeploy-add-domain.sh**         | Adds domain configuration to Nginx                    |
 | **xdeploy-view-logs.sh**          | Views PM2 logs for a specific server                  |
-| **xdeploy-install.sh**            | Installation script for xdeployer                     |
+| **xdeploy-update.sh**             | Updates xdeployer to the latest version               |
 
 For detailed information on each script, see the corresponding README files:
 
@@ -28,7 +26,7 @@ For detailed information on each script, see the corresponding README files:
 - [README-xdeploy-update-nginx-proxy.md](README-xdeploy-update-nginx-proxy.md) - Nginx proxy updates
 - [README-xdeploy-add-domain.md](README-xdeploy-add-domain.md) - Adding domain to Nginx
 - [README-xdeploy-view-logs.md](README-xdeploy-view-logs.md) - Viewing PM2 logs
-- [README-xdeploy-install.md](README-xdeploy-install.md) - Installation script
+- [README-xdeploy-update.md](README-xdeploy-update.md) - Updating xdeployer
 
 ## Requirements
 
@@ -58,32 +56,32 @@ sh xdeploy.sh create production
 sh xdeploy.sh update production
 ```
 
-## Main Commands
+## Commands
 
 ```bash
-# Deploy commands
-sh xdeploy.sh create production    # Create new deployment
-sh xdeploy.sh update production    # Update existing deployment
+# Deploy
+sh xdeploy.sh create production
+sh xdeploy.sh update production
 
 # Server management
-sh xdeploy.sh list                 # List available servers
-sh xdeploy.sh info production      # Show server details
+sh xdeploy.sh list
+sh xdeploy.sh info production
 
-# Server preparation
-sh xdeploy.sh setup-server production     # Install Node.js, PM2, Bun
-sh xdeploy.sh setup-nginx production      # Set up Nginx
-sh xdeploy.sh setup-ssl production        # Set up SSL with Let's Encrypt
-sh xdeploy.sh update-nginx production     # Update Nginx proxy configuration
-sh xdeploy.sh add-domain production       # Add domain configuration to Nginx
-sh xdeploy.sh view-logs production        # View PM2 logs (last 100 lines)
-sh xdeploy.sh view-logs production 500    # View PM2 logs (last 500 lines)
+# Server setup
+sh xdeploy.sh setup-server production
+sh xdeploy.sh setup-nginx production
+sh xdeploy.sh setup-ssl production
+
+# Other commands
+sh xdeploy.sh update-nginx production
+sh xdeploy.sh add-domain production
+sh xdeploy.sh view-logs production
+sh xdeploy.sh update-xdeploy
 ```
-
-> **Note:** Missing scripts will be automatically downloaded from GitHub when needed.
 
 ## Server Configuration
 
-Each server in `servers.json` requires these properties:
+Configure your servers in `servers.json`:
 
 | Property     | Description                      | Required |
 | ------------ | -------------------------------- | -------- |
@@ -98,9 +96,7 @@ Each server in `servers.json` requires these properties:
 | `enabled`    | Enable/disable server            | Yes      |
 | `url`        | Application URL                  | No       |
 | `hostname`   | Next.js hostname                 | No       |
-| `domain`     | Domain name (required for Nginx) | No\*     |
-
-\*Required for Nginx/SSL setup
+| `domain`     | Domain name (required for Nginx) | No       |
 
 ## License
 
