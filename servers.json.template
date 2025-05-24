@@ -29,6 +29,7 @@
       "domain": "staging.your-domain.com",
       "hostname": "127.0.0.1",
       "enabled": false,
+      "pre_cmd": "DEV_ENV=true",
       "_comment": "(url, domain, and hostname are optional; domain is required for prepare-nginx)"
     }
   ]

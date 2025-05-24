@@ -23,6 +23,7 @@
       "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
       "remote_dir": "/home/ubuntu/apps/my-nextjs-app-staging",
       "url": "http://your-staging-domain-or-ip:3001/",
+      "pre_cmd": "DEV_ENV=true",
       "_comment": "(url is optional)"
     }
   ]

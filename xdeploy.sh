@@ -177,6 +177,7 @@ deploy_to_server() {
     local remote_dir=$(echo "$server_info" | jq -r '.remote_dir')
     local url=$(echo "$server_info" | jq -r '.url')
     local hostname=$(echo "$server_info" | jq -r '.hostname // ""')
+    local pre_cmd=$(echo "$server_info" | jq -r '.pre_cmd // ""')
 
     echo "=== Deploying to $server_id: $url ==="
     echo "Mode: $mode"
@@ -184,6 +185,9 @@ deploy_to_server() {
     echo "Host: $host"
     if [ ! -z "$hostname" ]; then
         echo "Hostname: $hostname"
+    fi
+    if [ ! -z "$pre_cmd" ]; then
+        echo "Pre-command: $pre_cmd"
     fi
 
     # Check if next.config.js has standalone output configuration
@@ -224,6 +228,11 @@ deploy_to_server() {
         pm2_cmd="HOSTNAME=$hostname $pm2_cmd"
     fi
     pm2_cmd="$pm2_cmd node .next/standalone/server.js"
+
+    # Prepend pre_cmd if specified
+    if [ ! -z "$pre_cmd" ]; then
+        pm2_cmd="$pre_cmd $pm2_cmd"
+    fi
 
     # Copy zip file
     scp -i "$key_path" standalone.zip "$user@$host:$remote_dir/"
