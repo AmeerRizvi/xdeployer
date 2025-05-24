@@ -138,6 +138,19 @@ Configure your servers in `servers.json`:
       "hostname": "127.0.0.1",
       "domain": "your-domain.com",
       "enabled": true
+    },
+    {
+      "id": "staging",
+      "name": "Staging Server",
+      "app_name": "my-nextjs-app-staging",
+      "port": 3001,
+      "key_path": "~/.ssh/your-ec2-key.pem",
+      "user": "ubuntu",
+      "host": "ec2-xx-xx-xx-xx.compute.amazonaws.com",
+      "remote_dir": "/home/ubuntu/apps/my-nextjs-app-staging",
+      "url": "http://your-staging-domain-or-ip:3001/",
+      "pre_cmd": "DEV_ENV=true",
+      "enabled": true
     }
   ]
 }
@@ -160,6 +173,79 @@ Configure your servers in `servers.json`:
 - `url`: URL where the app will be accessible (for reference only)
 - `hostname`: Hostname for the Next.js server
 - `domain`: Domain name (required for Nginx setup)
+- `pre_cmd`: Environment variables or commands to prepend to PM2 start command
+
+## Environment Variables with pre_cmd
+
+The `pre_cmd` property allows you to set environment variables or prepend commands to the PM2 start command. This is useful for setting different environment configurations per server.
+
+### Examples
+
+#### Setting environment variables
+
+```json
+{
+  "id": "staging",
+  "name": "Staging Server",
+  "app_name": "my-app-staging",
+  "port": 3001,
+  "pre_cmd": "DEV_ENV=true",
+  "...": "other properties"
+}
+```
+
+This will result in the PM2 command:
+
+```bash
+DEV_ENV=true PORT=3001 NODE_ENV=production node .next/standalone/server.js
+```
+
+#### Multiple environment variables
+
+```json
+{
+  "id": "development",
+  "name": "Development Server",
+  "app_name": "my-app-dev",
+  "port": 3002,
+  "pre_cmd": "DEBUG=true LOG_LEVEL=debug",
+  "...": "other properties"
+}
+```
+
+This will result in the PM2 command:
+
+```bash
+DEBUG=true LOG_LEVEL=debug PORT=3002 NODE_ENV=production node .next/standalone/server.js
+```
+
+#### Database configuration
+
+```json
+{
+  "id": "production",
+  "name": "Production Server",
+  "app_name": "my-app-prod",
+  "port": 3000,
+  "pre_cmd": "DATABASE_URL=postgresql://user:pass@prod-db:5432/myapp",
+  "...": "other properties"
+}
+```
+
+### How it works
+
+1. When `pre_cmd` is specified in your server configuration, it gets extracted during deployment
+2. The script prepends the `pre_cmd` to the PM2 start command using the format: `pm2_cmd="$pre_cmd $pm2_cmd"`
+3. During deployment, you'll see "Pre-command: [your command]" in the output
+4. When PM2 starts or restarts the application, it will use the environment variables from `pre_cmd`
+
+### PM2 Update Behavior
+
+When you update an existing deployment:
+
+- PM2 will stop the existing process
+- Start a new process with the updated environment variables
+- The new environment variables will replace the old ones
 
 ## Troubleshooting
 
@@ -187,3 +273,13 @@ If PM2 fails to start or restart your application:
 - SSH into your server and check PM2 logs: `pm2 logs your-app-name`
 - Verify that PM2 is installed globally: `npm list -g pm2`
 - Check if the port is already in use: `sudo lsof -i :3000`
+
+### Environment Variable Issues
+
+If your environment variables from `pre_cmd` are not working:
+
+- Check the deployment output for "Pre-command: [your command]" to confirm it's being applied
+- SSH into your server and check the PM2 process environment: `pm2 show your-app-name`
+- Verify the environment variables are correctly formatted in `pre_cmd`
+- Test the environment variables manually: `DEV_ENV=true node .next/standalone/server.js`
+- Check PM2 logs for any environment-related errors: `pm2 logs your-app-name`

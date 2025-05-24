@@ -97,6 +97,7 @@ Configure your servers in `servers.json`:
 | `url`        | Application URL                  | No       |
 | `hostname`   | Next.js hostname                 | No       |
 | `domain`     | Domain name (required for Nginx) | No       |
+| `pre_cmd`    | Environment variables for PM2    | No       |
 
 ## License
 
