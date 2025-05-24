@@ -8,16 +8,16 @@ xdeployer is a collection of bash scripts that simplify the deployment and manag
 
 ## Available Scripts
 
-| Script                      | Description                                           |
-| --------------------------- | ----------------------------------------------------- |
-| **xdeploy.sh**              | Main deployment script for Next.js applications       |
-| **xdeploy-setup-server.sh** | Prepares servers with Node.js, PM2, and Bun           |
-| **xdeploy-setup-nginx.sh**  | Sets up Nginx as a reverse proxy for your application |
-| **xdeploy-setup-ssl.sh**    | Configures SSL certificates using Let's Encrypt       |
-| **xdeploy-update-nginx.sh** | Updates Nginx proxy configuration                     |
-| **xdeploy-add-domain.sh**   | Adds domain configuration to Nginx                    |
-| **xdeploy-view-logs.sh**    | Views PM2 logs for a specific server                  |
-| **xdeploy-install.sh**      | Installation script for xdeployer                     |
+| Script                            | Description                                           |
+| --------------------------------- | ----------------------------------------------------- |
+| **xdeploy.sh**                    | Main deployment script for Next.js applications       |
+| **xdeploy-setup-server.sh**       | Prepares servers with Node.js, PM2, and Bun           |
+| **xdeploy-setup-nginx.sh**        | Sets up Nginx as a reverse proxy for your application |
+| **xdeploy-setup-ssl.sh**          | Configures SSL certificates using Let's Encrypt       |
+| **xdeploy-update-nginx-proxy.sh** | Updates Nginx proxy configuration                     |
+| **xdeploy-add-domain.sh**         | Adds domain configuration to Nginx                    |
+| **xdeploy-view-logs.sh**          | Views PM2 logs for a specific server                  |
+| **xdeploy-install.sh**            | Installation script for xdeployer                     |
 
 For detailed information on each script, see the corresponding README files:
 
@@ -25,7 +25,7 @@ For detailed information on each script, see the corresponding README files:
 - [README-xdeploy-setup-server.md](README-xdeploy-setup-server.md) - Server setup and preparation
 - [README-xdeploy-setup-nginx.md](README-xdeploy-setup-nginx.md) - Nginx setup
 - [README-xdeploy-setup-ssl.md](README-xdeploy-setup-ssl.md) - SSL configuration
-- [README-xdeploy-update-nginx.md](README-xdeploy-update-nginx.md) - Nginx proxy updates
+- [README-xdeploy-update-nginx-proxy.md](README-xdeploy-update-nginx-proxy.md) - Nginx proxy updates
 - [README-xdeploy-add-domain.md](README-xdeploy-add-domain.md) - Adding domain to Nginx
 - [README-xdeploy-view-logs.md](README-xdeploy-view-logs.md) - Viewing PM2 logs
 - [README-xdeploy-install.md](README-xdeploy-install.md) - Installation script

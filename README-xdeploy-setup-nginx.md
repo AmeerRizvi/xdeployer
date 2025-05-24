@@ -4,11 +4,11 @@ This document explains how to use the Nginx setup scripts in xdeployer to config
 
 ## Available Scripts
 
-| Script                         | Description                                     |
-| ------------------------------ | ----------------------------------------------- |
-| **xdeploy-setup-nginx.sh**     | Sets up Nginx as a reverse proxy                |
-| **xdeploy-setup-ssl.sh**       | Configures SSL certificates using Let's Encrypt |
-| **xdeploy-update-nginx.sh**    | Updates Nginx proxy configuration               |
+| Script                            | Description                                     |
+| --------------------------------- | ----------------------------------------------- |
+| **xdeploy-setup-nginx.sh**        | Sets up Nginx as a reverse proxy                |
+| **xdeploy-setup-ssl.sh**          | Configures SSL certificates using Let's Encrypt |
+| **xdeploy-update-nginx-proxy.sh** | Updates Nginx proxy configuration               |
 
 ## Quick Start
 
@@ -56,7 +56,7 @@ sh xdeploy-setup-ssl.sh production
 ### Update Nginx proxy configuration
 
 ```bash
-sh xdeploy-update-nginx.sh production
+sh xdeploy-update-nginx-proxy.sh production
 ```
 
 ## Server Configuration
